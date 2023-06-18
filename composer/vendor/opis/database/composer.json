@@ -1,0 +1,38 @@
+{
+    "name": "opis/database",
+    "description": "A database abstraction layer over PDO, that provides a powerful and intuitive query builder, bundled with an easy to use schema builder",
+    "keywords": ["database", "query", "abstraction layer", "mysql", "postgre", "sql", "sqlite",  "query builder", "schema builder"],
+    "homepage": "http://opis.io",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Marius Sarca",
+            "email": "marius.sarca@gmail.com"
+        }
+    ],
+    "scripts": {
+      "test": "vendor/bin/phpunit"
+    },
+    "require": {
+        "php": ">=7.0.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.5",
+        "symfony/yaml": "^3.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Opis\\Database\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Opis\\Database\\Test\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "4.0.x-dev"
+        }
+    }
+}

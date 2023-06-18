@@ -1,0 +1,113 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "ff6dc6fc2a18a4d16728e5b7008f82ec",
+    "packages": [
+        {
+            "name": "legomolina/simple-orm",
+            "version": "2.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/legomolina/simple-orm.git",
+                "reference": "c53cd5e8b3ca7bf3b581ec30e6acf02571f4df11"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/legomolina/simple-orm/zipball/c53cd5e8b3ca7bf3b581ec30e6acf02571f4df11",
+                "reference": "c53cd5e8b3ca7bf3b581ec30e6acf02571f4df11",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "SimpleORM\\": "SimpleORM/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Cristian Molina",
+                    "email": "legomolina@gmail.com"
+                }
+            ],
+            "description": "SimpleORM is a little ORM based on PHP",
+            "keywords": [
+                "Simple",
+                "orm",
+                "php"
+            ],
+            "support": {
+                "issues": "https://github.com/legomolina/simple-orm/issues",
+                "source": "https://github.com/legomolina/simple-orm/tree/master"
+            },
+            "time": "2017-03-22T13:17:20+00:00"
+        },
+        {
+            "name": "sibyx/phpgpx",
+            "version": "1.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Sibyx/phpGPX.git",
+                "reference": "ae2fc57617ded987710e22128d94a0c20d4401da"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Sibyx/phpGPX/zipball/ae2fc57617ded987710e22128d94a0c20d4401da",
+                "reference": "ae2fc57617ded987710e22128d94a0c20d4401da",
+                "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "ext-simplexml": "*",
+                "lib-libxml": "*",
+                "php": ">=5.5"
+            },
+            "require-dev": {
+                "evert/phpdoc-md": "~0.2.0",
+                "friendsofphp/php-cs-fixer": "^2.18",
+                "phpunit/phpunit": "^6.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "phpGPX\\": "src/phpGPX/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jakub Dubec",
+                    "email": "jakub.dubec@gmail.com",
+                    "homepage": "https://jakubdubec.me"
+                }
+            ],
+            "description": "A simple PHP library for GPX import/export",
+            "support": {
+                "issues": "https://github.com/Sibyx/phpGPX/issues",
+                "source": "https://github.com/Sibyx/phpGPX/tree/1.2.1"
+            },
+            "time": "2022-07-30T20:25:35+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": [],
+    "plugin-api-version": "2.3.0"
+}

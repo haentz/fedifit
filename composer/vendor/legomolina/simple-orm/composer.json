@@ -1,0 +1,25 @@
+{
+  "name": "legomolina/simple-orm",
+  "type": "library",
+  "description": "SimpleORM is a little ORM based on PHP",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Cristian Molina",
+      "email": "legomolina@gmail.com"
+    }
+  ],
+  "keywords": [
+    "ORM",
+    "PHP",
+    "simple"
+  ],
+  "require": {
+    "php": ">=7.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "SimpleORM\\": "SimpleORM/"
+    }
+  }
+}

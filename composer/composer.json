@@ -1,0 +1,6 @@
+{
+    "require": {
+        "opis/orm": "^1.0",
+        "legomolina/simple-orm": "^2.0"
+    }
+}
