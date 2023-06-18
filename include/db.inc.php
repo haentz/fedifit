@@ -1,6 +1,7 @@
 <?php
 
-require_once('composer/vendor/autoload.php');
+require_once('vendor/autoload.php');
+
 
 use Opis\Database\Connection;
 
@@ -29,10 +30,10 @@ class Activity extends Entity  implements IMappableEntity
 
 
 /**
-     * Get user's ID
+     * Get activity's ID
      * @return int
      */
-    public function id(): int
+    public function getId(): int
     {
         return $this->orm()->getColumn('id');
     }
@@ -57,6 +58,26 @@ class Activity extends Entity  implements IMappableEntity
         return $this;
     }
 
+
+     /**
+     * Get activity hash
+     * @return string
+     */
+    public function getHash(): string
+    {
+        return $this->orm()->getColumn('hash');
+    }
+
+    /**
+     * Set activity hash
+     * @param string $hash
+     * @return activity
+     */
+    public function setHash(string $hash): self
+    {
+        $this->orm()->setColumn('hash', $hash);
+        return $this;
+    }
 
 
 /**
@@ -127,6 +148,7 @@ class Activity extends Entity  implements IMappableEntity
       $mapper->cast([
            'id' => 'integer',
            'fkiduser' => 'integer',
+           'hash' => 'string',
            'creationdate' => 'date',
            'activitydate' => 'date',
            'activityfile' => 'string',

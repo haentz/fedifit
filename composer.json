@@ -1,6 +1,7 @@
 {
     "require": {
-        "legomolina/simple-orm": "^2.0",
-        "sibyx/phpgpx": "1.2.1"
+        "sibyx/phpgpx": "1.2.1",
+        "opis/database": "^4.0",
+        "opis/orm": "^1.0"
     }
 }

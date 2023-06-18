@@ -1,7 +1,7 @@
 <?php
 /*
 composer
-    - "legomolina/simple-orm": "^2.0",
+   
     - "sibyx/phpgpx": "1.2.1"
 
 nginx user write permissions to temp fileupload (mac /opt/homebrew/var/run/nginx/client_body_temp/)
@@ -30,6 +30,29 @@ $target_file = $target_dir . $targetfilename;
 
 // check if gpx already uploaded
 
+
+// create Activity
+// Create a new entity
+$activity = $orm->create(Activity::class);
+
+// Set user's name
+$activity->setFkiduser(1);
+$activity->setCreationdate(new DateTime());
+$activity->setHash( hash('ripemd160', 'hashsalt'));
+// Persist our entity
+
+//print_r($activity);
+
+//insert Activity
+if ($orm->save($activity)) {
+    echo "Entity was saved";
+} else {
+    die("Something went wrong");
+}
+
+
+// get ID of new activity
+echo $activity->getId();
 
 
 
@@ -65,24 +88,6 @@ if ($uploadOk == 0) {
 
 //extract key fields (speed, duration ,date) fom gpx file
 
-// create Activity
-// Create a new entity
-$activity = $orm->create(Activity::class);
-
-// Set user's name
-$activity->setFkiduser(1);
-$activity->setCreationdate(new DateTime());
-$activity->setActivitydate(new DateTime());
-// Persist our entity
-
-//print_r($activity);
-
-//insert Activity
-if ($orm->save($activity)) {
-    echo "Entity was saved";
-} else {
-    die("Something went wrong");
-}
 
 
 // render preview image for map (move this step into a rendering queue)
