@@ -1,7 +1,0 @@
-/vendor/
-.idea/
-_site/
-shared/
-Gemfile.lock
-tests/db.sql
-composer.lock
