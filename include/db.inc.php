@@ -128,14 +128,54 @@ class Activity extends Entity  implements IMappableEntity
   {
       return $this->orm()->getColumn('activityfile');
   }      // User entity
+
+    public function setActivityfile(String     $activityfile): self
+    {
+        $this->orm()->setColumn('activityfile', $activityfile);
+        return $this;
+    }
+
+
+
+
+
+    public function getDistance(): int
+    {
+        return $this->orm()->getColumn('distance');
+    }      // User entity
+  
+      public function setDistance(int     $distance): self
+      {
+          $this->orm()->setColumn('distance', $distance);
+          return $this;
+      }
   
 
-     /**
-   * @inheritdoc
-   */
+
+  public function getDuration(): int
+  {
+      return $this->orm()->getColumn('duration');
+  }      // User entity
+
+    public function setDuration(int     $duration): self
+    {
+        $this->orm()->setColumn('duration', $duration);
+        return $this;
+    }
 
 
-  
+  public function getAscend(): int
+  {
+      return $this->orm()->getColumn('ascend');
+  }      // User entity
+
+    public function setAscend(int     $ascend): self
+    {
+        $this->orm()->setColumn('ascend', $ascend);
+        return $this;
+    }
+
+
 
 
 
@@ -152,7 +192,7 @@ class Activity extends Entity  implements IMappableEntity
            'creationdate' => 'date',
            'activitydate' => 'date',
            'activityfile' => 'string',
-           'distance' => 'integer',
+           'distance' => 'int',
            'duration' => 'integer',
            'ascend' => 'integer',
            'mapimage' => 'string'
