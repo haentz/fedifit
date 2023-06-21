@@ -1,5 +1,4 @@
 <?php
-error_reporting(E_ERROR  | E_PARSE);
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
     
@@ -12,7 +11,7 @@ if($login=="submit") {
     //require DB stuff
     require_once('include/db.inc.php');
     require_once('include/db_tuser.inc.php');
-    require_once('include/DO_NOT_DEPLOY.php");
+    require_once("include/DO_NOT_DEPLOY.php");
     $user = $orm->create(User::class);
 
     $email = $_POST["email"];
@@ -62,7 +61,8 @@ $mail->IsHTML(false);
 $mail->AddAddress($user->getEmail(), "recipient-name");
 $mail->SetFrom("hans@hans-schneider.de", "from-name");
 $mail->Subject = "Login to Fedifit";
-$content = "Your login to Fedifit: http://".$_SERVER["SERVER_NAME"]."/login/".$user->getLogintoken();
+$content = "Your login to Fedifit: http://".$_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"]."/login_do.php?t=".$user->getLogintoken();
+// todo: change to rewrite: /login/0abcd... 
 
 $mail->MsgHTML($content); 
 if(!$mail->Send()) {
