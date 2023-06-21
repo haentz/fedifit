@@ -72,7 +72,7 @@ class User extends Entity  implements IMappableEntity
   }
 
    /**
-  *  id
+  *  loogintokencreatiodnate
   */
   public function getLogintokencreationdate(): DateTime
   {
@@ -86,7 +86,7 @@ class User extends Entity  implements IMappableEntity
   }
 
      /**
-  *  logintoken
+  *  creationdate
   */
   public function getCreationdate(): DateTime
   {
@@ -111,7 +111,7 @@ class User extends Entity  implements IMappableEntity
      
      $mapper->cast([
           'id' => 'integer',
-          'email' => 'integer',
+          'email' => 'string',
           'name' => 'string',
           'creationdate' => 'date',
           'logintoken' => 'string',

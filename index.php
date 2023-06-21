@@ -1,21 +1,44 @@
+<?php
+//submitted from join form?
+
+
+
+// get parameter email, name
+
+
+// check if email, name in db ?
+
+//yes?  error
+
+
+
+//no?
+
+//insert into db, create logintoken, send email, confirm message
+
+
+?>
 
 <!DOCTYPE html>
 <html>
 <body>
 
-<form action="insert_activity.php" method="post" enctype="multipart/form-data">
-  Select image to upload:
-  <input type="file" name="gpxfile" id="gpxfile">
-  <input type="submit" value="Upload GPX" name="submit">
+<form action="/" method="post" enctype="multipart/form-data">
+  Join:  <br>
+  <label for="email">Email:
+  <input type="text" name="email" id="email">
+  </label>
+
+  <br>
+
+  <label for="name">Nickname:
+  <input type="text" name="name" id="name">
+  </label>
+  
+  <br>
+  
+  <input type="submit" value="submit" name="Join">
 </form>
 
 </body>
-</html><?php
-
-// require_once('include/db.inc.php');
-
-// $activities = $orm(Activity::class)->all();
-// print_r($activities);
-
-phpinfo();
-?>
+</html>
