@@ -1,15 +1,21 @@
 <?php
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-    
+require_once('include/db.inc.php');
+session_start();
 
+// todo: in include!
+if(isset($_SESSION['iduser'])) {
+    header('Location: /members/');
+    die();
+}
+ 
 $message= "";
 
 // submitted?
 $login = $_POST["Login"];
 if($login=="submit") {
     //require DB stuff
-    require_once('include/db.inc.php');
     require_once('include/db_tuser.inc.php');
     require_once("include/DO_NOT_DEPLOY.php");
     $user = $orm->create(User::class);
@@ -77,6 +83,7 @@ if(!$mail->Send()) {
 ?><!DOCTYPE html>
 <html>
 <body>
+<?php include("include/nav.inc.php") ?>
 <?= $message ?>
 <form action="login.php" method="post" enctype="multipart/form-data">
   Login:  <br>

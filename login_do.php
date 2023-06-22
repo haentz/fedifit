@@ -5,6 +5,11 @@ $message = "";
 require_once('include/db.inc.php');
 require_once('include/db_tuser.inc.php');
 require_once("include/DO_NOT_DEPLOY.php");
+
+
+
+
+
 $user = $orm->create(User::class);
 
 $token = $_GET["t"];
