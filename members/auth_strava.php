@@ -9,6 +9,7 @@ use Strava\API\OAuth;
 use Strava\API\Exception;
 use Strava\API\Service\REST;
 use Strava\API\Client;
+use User;
 
 //print_r($_GET);
 //Array ( [state] => b2912cd7a79f2525a8dc3c1d1be34038 [code] => 7771f377e08337d1224bc9d75394279d149fd5ab [scope] => read,activity:read ) 86f19527f724c7f14ab6628b1da17dbd10e03251
@@ -38,6 +39,20 @@ if($_GET['scope']!="read,activity:read") {
         echo 'Refresh Token: ' . $token->getRefreshToken() . "<br>";
         echo 'Expired in: ' . $token->getExpires() . "<br>";
         echo 'Already expired? ' . ($token->hasExpired() ? 'expired' : 'not expired') . "<br>";
+// check if user connected to strava
+$user = $orm->create(User::class);
+
+
+// get iduser by token. only valid for 1 hour!
+$user =  $orm(User::class)->where('id')->is($iduser)
+->get();
+
+$user->setStravaAccessToken($token->getToken());
+$user->setStravaRefreshToken($token->getRefreshToken());
+$user->setStravaExpirationdate($token->getExpires());
+$user->setStravaId($token->);
+
+$orm->save($user);
 
 // refreshing token:
 // $existingAccessToken = getAccessTokenFromYourDataStore();
