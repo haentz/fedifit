@@ -101,6 +101,66 @@ class User extends Entity  implements IMappableEntity
 
 
 
+/**
+  *  strava_athlete_id 
+  */
+  public function getStravaId(): int
+  {
+      return $this->orm()->getColumn('strava_athlete_id');
+  }
+      
+  public function setStravaId(string $id): self
+  {
+      $this->orm()->setColumn('strava_athlete_id', $id);
+      return $this;
+  }
+
+
+   /**
+  *  strava_access_token
+  */
+  public function getStravaAccessToken(): string
+  {
+      return $this->orm()->getColumn('strava_access_token');
+  }
+      
+  public function etStravaAccessToken(string $strava_access_token): self
+  {
+      $this->orm()->setColumn('strava_access_token', $strava_access_token);
+      return $this;
+    }
+  
+
+   /**
+  *  strava_refresh_token
+  */
+  public function getStravaRefreshToken(): string
+  {
+      return $this->orm()->getColumn('strava_refresh_token');
+  }
+      
+  public function etStravaRefreshToken(string $strava_refresh_token): self
+  {
+      $this->orm()->setColumn('strava_refresh_token', $strava_refresh_token);
+      return $this;
+  }
+
+     /**
+  *  strava_access_token_expirationdate
+  */
+  public function getStravaExpirationdate(): DateTime
+  {
+      return $this->orm()->getColumn('strava_access_token_expirationdate');
+  }
+      
+  public function setStravaExpirationdate(DateTime $strava_access_token_expirationdate): self
+  {
+      $this->orm()->setColumn('strava_access_token_expirationdate', $strava_access_token_expirationdate);
+      return $this;
+  }
+
+
+
 
 
   public static function mapEntity(IEntityMapper $mapper)
@@ -115,10 +175,17 @@ class User extends Entity  implements IMappableEntity
           'name' => 'string',
           'creationdate' => 'date',
           'logintoken' => 'string',
-          'logintokencreationdate' => 'date'
+          'logintokencreationdate' => 'date',
+          `strava_athlete_id` => 'integer',
+          `strava_refresh_token` => 'string',
+          `strava_access_token` => 'string',
+          `strava_access_token_expirationdate`  => 'date'
       ]);
 
   
+
+
+
   }
 
 

@@ -1,7 +1,7 @@
 <?php
 error_reporting(E_ERROR  | E_PARSE);
-
-require_once('vendor/autoload.php');
+$basedir = $_SERVER['DOCUMENT_ROOT'];
+require_once($basedir.'/vendor/autoload.php');
 
 
 use Opis\Database\Connection;

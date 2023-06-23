@@ -7,6 +7,4 @@ if(!isset($_SESSION['iduser'])) {
  
 //Abfrage der Nutzer ID vom Login
 $iduser = $_SESSION['iduser'];
- 
-
 ?>
