@@ -3,6 +3,7 @@
         "sibyx/phpgpx": "1.2.1",
         "opis/database": "^4.0",
         "opis/orm": "^1.0",
-        "phpmailer/phpmailer": "^6.8"
+        "phpmailer/phpmailer": "^6.8",
+        "basvandorst/stravaphp": "^2.0"
     }
 }
