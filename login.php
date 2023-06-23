@@ -17,7 +17,7 @@ $login = $_POST["Login"];
 if($login=="submit") {
     //require DB stuff
     require_once('include/db_tuser.inc.php');
-    require_once("../include/DO_NOT_DEPLOY.php");
+    require_once("../../DO_NOT_DEPLOY.php");
     $user = $orm->create(User::class);
 
     $email = $_POST["email"];

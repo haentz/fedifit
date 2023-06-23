@@ -4,7 +4,7 @@ $message = "";
 // get user from token
 require_once('include/db.inc.php');
 require_once('include/db_tuser.inc.php');
-require_once("include/DO_NOT_DEPLOY.php");
+require_once("../DO_NOT_DEPLOY.php");
 
 
 
@@ -18,6 +18,9 @@ $token = $_GET["t"];
 $user =  $orm(User::class)->where('logintoken')->is($token)
 ->andWhere("logintokencreationdate")->greaterThan((new \DateTime())->modify('-1 hour'))
 ->get();
+
+//todo: better registration process: ->andWhere("confirmed")->is(true)
+
 
 if($user) {
     $iduser = $user->getId();

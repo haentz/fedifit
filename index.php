@@ -21,7 +21,7 @@ if($name==""   || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
 } else {
 
   require_once('include/db_tuser.inc.php');
-  require_once("include/DO_NOT_DEPLOY.php");
+  require_once("../DO_NOT_DEPLOY.php");
   $user = $orm->create(User::class);
   
   $user =  $orm(User::class)->where('email')->is($email)->get();
@@ -42,7 +42,7 @@ if($name==""   || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
   if($error==0){
     $user = $orm->create(User::class);
-   
+   // todo: better rresgistration process. set in db: user_email_confirmed=0, do not send link to login, but to confirm&login in first registratioon email,. If user doesnt click within 24h, remove from db
    
     // Set user's name
     $user->setEmail($email);  
