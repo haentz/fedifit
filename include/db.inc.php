@@ -14,7 +14,7 @@ use Opis\ORM\{
 };
 
 //  // Define a database connection
-$connection = new Connection("mysql:host=localhost;dbname=activities", "activities_app", "password");
+$connection = new Connection("mysql:host=10.0.1.94;dbname=fedifit", "fedifit", "fit");
   
   
 //  // Create an entity manager
