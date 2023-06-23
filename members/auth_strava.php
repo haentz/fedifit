@@ -31,27 +31,50 @@ if($_GET['scope']!="read,activity:read") {
         $token = $oauth->getAccessToken('authorization_code', [
             'code' => $_GET['code']
         ]);
-        
-        
-        try {
-            $adapter = new \GuzzleHttp\Client(['base_uri' => 'https://www.strava.com/api/v3/']);
-            $service = new REST($token->getToken(), $adapter);  // Define your user token here.
-            $client = new Client($service);
-        
-            $athlete = $client->getAthlete();
-            print_r($athlete);
-        
-            $activities = $client->getAthleteActivities();
-            print_r($activities);
-        
-            $club = $client->getClub(9729);
-            print_r($club);
-        } catch(Exception $e) {
-            print $e->getMessage();
-        }
+       
+           // We have an access token, which we may use in authenticated
+        // requests against the service provider's API.
+        echo 'Access Token: ' . $token->getToken() . "<br>";
+        echo 'Refresh Token: ' . $token->getRefreshToken() . "<br>";
+        echo 'Expired in: ' . $token->getExpires() . "<br>";
+        echo 'Already expired? ' . ($token->hasExpired() ? 'expired' : 'not expired') . "<br>";
+
+// refreshing token:
+// $existingAccessToken = getAccessTokenFromYourDataStore();
+
+// if ($existingAccessToken->hasExpired()) {
+//     $newAccessToken = $provider->getAccessToken('refresh_token', [
+//         'refresh_token' => $existingAccessToken->getRefreshToken()
+//     ]);
+
+//     // Purge old access token and store new access token to your data store.
+// }
 
 
-    }
+
+//print_r($token);
+//League\OAuth2\Client\Token\AccessToken Object ( [accessToken:protected] => 86f19527f724c7f14ab6628b1da17dbd10e03251 [expires:protected] => 1687542063 [refreshToken:protected] => 4b8f8fa7c0b43ceeb2b28bcdf475829ac395e79f [resourceOwnerId:protected] => [values:protected] => Array ( [token_type] => Bearer [expires_at] => 1687542063 [athlete] => Array ( [id] => 2321457 [username] => hansschneider [resource_state] => 2 [firstname] => Hans [lastname] => Fritz [bio] => [city] => Munich [state] => Bavaria [country] => Germany [sex] => M [premium] => 1 [summit] => 1 [created_at] => 2013-06-10T11:00:20Z [updated_at] => 2023-06-23T11:28:12Z [badge_type_id] => 1 [weight] => 97.6 [profile_medium] => https://dgalywyr863hv.cloudfront.net/pictures/athletes/2321457/1629111/3/medium.jpg [profile] => https://dgalywyr863hv.cloudfront.net/pictures/athletes/2321457/1629111/3/large.jpg [friend] => [follower] => ) ) ) 
+
+        
+    //     try {
+    //         $adapter = new \GuzzleHttp\Client(['base_uri' => 'https://www.strava.com/api/v3/']);
+    //         $service = new REST($token->getToken(), $adapter);  // Define your user token here.
+    //         $client = new Client($service);
+        
+
+          
+
+    //         $athlete = $client->getAthlete();
+    //         print_r($athlete);
+        
+          
+          
+    //     } catch(Exception $e) {
+    //         print $e->getMessage();
+    //     }
+
+
+    // }
 
 }
 
