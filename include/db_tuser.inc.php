@@ -104,7 +104,7 @@ class User extends Entity  implements IMappableEntity
 /**
   *  strava_athlete_id 
   */
-  public function getStravaId(): int
+  public function getStravaId(): ?int
   {
       return $this->orm()->getColumn('strava_athlete_id');
   }
@@ -119,12 +119,12 @@ class User extends Entity  implements IMappableEntity
    /**
   *  strava_access_token
   */
-  public function getStravaAccessToken(): string
+  public function getStravaAccessToken(): ?string
   {
       return $this->orm()->getColumn('strava_access_token');
   }
       
-  public function etStravaAccessToken(string $strava_access_token): self
+  public function setStravaAccessToken(string $strava_access_token): self
   {
       $this->orm()->setColumn('strava_access_token', $strava_access_token);
       return $this;
@@ -134,12 +134,12 @@ class User extends Entity  implements IMappableEntity
    /**
   *  strava_refresh_token
   */
-  public function getStravaRefreshToken(): string
+  public function getStravaRefreshToken(): ?string
   {
       return $this->orm()->getColumn('strava_refresh_token');
   }
       
-  public function etStravaRefreshToken(string $strava_refresh_token): self
+  public function setStravaRefreshToken(string $strava_refresh_token): self
   {
       $this->orm()->setColumn('strava_refresh_token', $strava_refresh_token);
       return $this;
@@ -148,7 +148,7 @@ class User extends Entity  implements IMappableEntity
      /**
   *  strava_access_token_expirationdate
   */
-  public function getStravaExpirationdate(): DateTime
+  public function getStravaExpirationdate(): ?DateTime
   {
       return $this->orm()->getColumn('strava_access_token_expirationdate');
   }
@@ -177,9 +177,9 @@ class User extends Entity  implements IMappableEntity
           'logintoken' => 'string',
           'logintokencreationdate' => 'date',
           `strava_athlete_id` => 'integer',
-          `strava_refresh_token` => 'string',
-          `strava_access_token` => 'string',
-          `strava_access_token_expirationdate`  => 'date'
+          `strava_refresh_token` => '?string',
+          `strava_access_token` => '?string',
+          `strava_access_token_expirationdate`  => '?date'
       ]);
 
   

@@ -1,13 +1,13 @@
 <?php
+require_once('../include/db.inc.php');
 require_once($basedir.'/include/loggedin.inc.php');
 include $basedir.'/vendor/autoload.php';
-require_once($basedir.'/include/db.inc.php');
 require_once($basedir.'/include/db_tuser.inc.php');
 
 use Strava\API\OAuth;
 use Strava\API\Exception;
 
-
+$error = $_GET['p'];
 // get user object from db
 
 
@@ -24,18 +24,44 @@ $user =  $orm(User::class)->where('id')->is($iduser)
 ?><?php include($basedir."/include/nav.inc.php") ?>
 
 <h1>members area</h1>
+<?php 
+// user did not get permissions on strava and was redirected here
+if($error==1) { ?>
+<b>Please set sufficient permissions on Strava.</b><br>
+
+<?php } ?>
 <?= $user->getName() ?>
 <?php
 
-
+if ($user->getStravaAccessToken()==null) {
 // if not connected to strava… {}
 
-?>
+try {
+    $options = [
+        'clientId'     => $stravaCLientID,
+        'clientSecret' => $stravaAppToken,
+        'redirectUri'  => $stravaRedirectURI
+    ];
+    $oauth = new OAuth($options);
 
-Connect Strava
-
-
-<?php
+  
+        print '<a href="'.$oauth->getAuthorizationUrl([
+            // Uncomment required scopes.
+            'scope' => [
+                //'read',
+                // 'read_all',
+                // 'profile:read_all',
+                // 'profile:write',
+                 'activity:read',
+                // 'activity:read_all',
+                // 'activity:write',
+            ]
+        ]).'">Connect</a>';
+ 
+} catch(Exception $e) {
+    print $e->getMessage();
+}
+}
 
 // else 
 
