@@ -99,18 +99,6 @@ if(!$mail->Send()) {
 
 }
 
-// get parameter email, name
-
-
-// check if email, name in db ?
-
-//yes?  error
-
-
-
-//no?
-
-//insert into db, create logintoken, send email, confirm message
 
 
 ?>

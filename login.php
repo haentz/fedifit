@@ -39,9 +39,7 @@ if($login=="submit") {
     $orm->save($user);
     
     
-    // insert logintoken + date in db
-    // send login email
-
+    
     } else {
 
         // email not found error message!

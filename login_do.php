@@ -2,6 +2,7 @@
 session_start();
 $message = "";
 // get user from token
+
 require_once('include/db.inc.php');
 require_once('include/db_tuser.inc.php');
 require_once("../DO_NOT_DEPLOY.php");
