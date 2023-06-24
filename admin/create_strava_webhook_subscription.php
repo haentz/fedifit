@@ -20,7 +20,7 @@ if (isset($_GET['hub.challenge']) && $_GET["hub.verify_token"]=="STRAVAhans111!"
 // $verify_token = 'STRAVA';
 
 // curl -X POST https://www.strava.com/api/v3/push_subscriptions \
-// -F client_id=95919 \
+// -F client_id=$STRAVA_CLIENT_ID \
 // -F client_secret=$STRAVA_CLIENT_SECRET  \
 // -F callback_url=http://a-valid.com/url \
 // -F verify_token=$STRAVA_VERIFY_TOKEN
