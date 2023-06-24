@@ -1,10 +1,14 @@
 <?php
 require_once('../include/db.inc.php');
+require_once('../include/images.inc.php');
+
 require_once($basedir.'/include/loggedin.inc.php');
 include $basedir.'/vendor/autoload.php';
 
 require_once($basedir.'/include/db_tuser.inc.php');
 require_once($basedir.'/include/db_tactivity.inc.php');
+
+
 
 use Strava\API\OAuth;
 use Strava\API\Exception;
@@ -79,11 +83,11 @@ League\OAuth2\Client\Token\AccessToken Object ( [accessToken:protected] => 1ee46
 
         $orm->save($user); 
 
+        
 
-
-    // TODO: import last ride from strava
-    // Only last ride importet, not the complete history, since for this use case (post new rides to social feed) it doesn't make sense to have all the old rides appear. 
-    // Importing the last ride might be a nice way to kickstart your feed and have SOEMTHING in.
+        // TODO: import last ride from strava
+        // Only last ride importet, not the complete history, since for this use case (post new rides to social feed) it doesn't make sense to have all the old rides appear. 
+        // Importing the last ride might be a nice way to kickstart your feed and have SOEMTHING in.
         try {
             $adapter = new \GuzzleHttp\Client(['base_uri' => 'https://www.strava.com/api/v3/']);
             $service = new REST($token->getToken(), $adapter);  // Define your user token here.
@@ -101,193 +105,32 @@ League\OAuth2\Client\Token\AccessToken Object ( [accessToken:protected] => 1ee46
 
 
                 $stravaActivity = $activities[0];
-                
                 $activity = $orm->create(Activity::class);
-                $activity->setFkiduser($user->getId());
-                $activity->setCreationdate(new DateTime());
-                $activity->setStrava_activity_id($stravaActivity["id"]);
-                $activity->setText($stravaActivity["type"]." ".$stravaActivity["name"]);
-                $heroimageFilename = hash('ripemd128', "heroimagesalt".$user->getId().time()).".jpg"; 
-                $activity->setHeroImage($heroimageFilename);
-
-                $orm->save($activity);
-
-                //do we have a map?
-                if($stravaActivity["map"]["summary_polyline"]!="") {
+                
+                 //TODO: clean up code in libraries
+                 if($stravaActivity["map"]["summary_polyline"]!="") {
                     error_log("strava activity has map data",0);
-                    $points = Polyline::decode($stravaActivity["map"]["summary_polyline"]);
-                    $points = Polyline::pair($points);
-            
-                    // get bounding box
-                    $polygon = new \League\Geotools\Polygon\Polygon(
-                        $points
-                    );
-                    $boundingBox = $polygon->getBoundingBox();
-
-                   
-                    // calcualte middle point of map
-                    $geotools   = new \League\Geotools\Geotools();
-                    $southWest = new \League\Geotools\Coordinate\Coordinate([$boundingBox->getSouth(), $boundingBox->getwest()]);
-                    $northEast = new \League\Geotools\Coordinate\Coordinate([$boundingBox->getNorth(), $boundingBox->getEast()]);
-                    $coordA   = $southWest;
-                    $coordB   = $northEast;
-                    $vertex    =  $geotools->vertex()->setFrom($coordA)->setTo($coordB);
-                    $middlePoint = $vertex->middle(); // \League\Geotools\Coordinate\Coordinate
-
-                    // calculate zoom
-
-                 // TODO: is this right??
-
-
-                    $zoomLevel = 12;
-                    $latDiff = $northEast->getLatitude() - $southWest->getLatitude();
-                    $lngDiff = $northEast->getLongitude() - $southWest->getLongitude();
                     
-                    $maxDiff=$lngDiff>$latDiff?$lngDiff:$latDiff;
-                     if ($maxDiff < 360 / pow(2, 20)) {
-                        $zoomLevel = 21;
-                    } else {
-                        $zoomLevel = (int) (-1*( (log($maxDiff)/log(2)) - (log(360)/log(2))));
-                        if ($zoomLevel < 1)
-                            $zoomLevel = 1;
+                    $heroimageFilename = hash('ripemd128', "heroimagesalt".$user->getId().time()).".jpg"; 
+                    
+                    if(saveRouteToImage($stravaActivity["map"]["summary_polyline"],$heroimageFilename)) {
+                        $activity->setHeroImage($heroimageFilename);
                     }
-                    $zoomLevel++;
-                   // print_r($boundingBox);
-//League\Geotools\BoundingBox\BoundingBox Object ( [north:League\Geotools\BoundingBox\BoundingBox:private] => 48.08094 [east:League\Geotools\BoundingBox\BoundingBox:private] => 11.52298 [south:League\Geotools\BoundingBox\BoundingBox:private] => 48.08094 [west:League\Geotools\BoundingBox\BoundingBox:private] => 11.52298 [hasCoordinate:League\Geotools\BoundingBox\BoundingBox:private] => 1 [ellipsoid:League\Geotools\BoundingBox\BoundingBox:private] => League\Geotools\Coordinate\Ellipsoid Object ( [name:protected] => WGS 84 [a:protected] => 6378137 [invF:protected] => 298.257223563 ) [precision:League\Geotools\BoundingBox\BoundingBox:private] => 8 )
-        
-//
-
-
-
-$lineToDraw = new Line('FF0000DD', 2);
-
-foreach($points as $point) {
-    
-    $lineToDraw->addPoint(new LatLng($point[0], $point[1]));
-}
-
-
-
-$image = (new OpenStreetMap(new LatLng($middlePoint->getLatitude(), $middlePoint->getLongitude()), $zoomLevel, 800, 800))
-   
-    ->addDraw($lineToDraw)
-    ->getImage();
-    
-   $fontsize = 50;
-    $bottomBorder = 60;
-    $textbounding = $image->writeTextAndGetBoundingBox("Duration: ", '../include/font.ttf', $fontsize, '#00000066', 20 , 800-$fontsize*2-$bottomBorder-20, "left", "top");
-    $minutes = floor($stravaActivity["moving_time"]/60);
-    $textbounding = $image->writeTextAndGetBoundingBox(intdiv($minutes, 60).':'. ($minutes % 60) . "h", '../include/font.ttf', $fontsize, '#00000066', 380 , 800-$fontsize*2-$bottomBorder-20, "right", "top");
- 
-   $textbounding = $image->writeTextAndGetBoundingBox('Distance: ', '../include/font.ttf', $fontsize, '#00000066', 20, 800-$fontsize-$bottomBorder, "left", "top");
- // Array ( [top-left] => Array ( [x] => 22 [y] => 679 ) [top-right] => Array ( [x] => 182 [y] => 679 ) [bottom-left] => Array ( [x] => 22 [y] => 718 ) [bottom-right] => Array ( [x] => 182 [y] => 718 ) [baseline] => Array ( [x] => 20 [y] => 718 ) )
-    $textbounding = $image->writeTextAndGetBoundingBox(floor($stravaActivity["distance"]/1000). "km", '../include/font.ttf', $fontsize, '#00000066',  380, 800-$fontsize-$bottomBorder, "right", "top"); //x: $textbounding["top-right"]["x"]
-    
-
-
-    $textbounding = $image->writeTextAndGetBoundingBox('Ascend: ', '../include/font.ttf', $fontsize, '#00000066', 420, 800-$fontsize*2-$bottomBorder-20, "left", "top");
-    // Array ( [top-left] => Array ( [x] => 22 [y] => 679 ) [top-right] => Array ( [x] => 182 [y] => 679 ) [bottom-left] => Array ( [x] => 22 [y] => 718 ) [bottom-right] => Array ( [x] => 182 [y] => 718 ) [baseline] => Array ( [x] => 20 [y] => 718 ) )
-    $textbounding = $image->writeTextAndGetBoundingBox($stravaActivity["total_elevation_gain"] . "m", '../include/font.ttf', $fontsize, '#00000066', 780 , 800-$fontsize*2-$bottomBorder-20, "right", "top");
- 
-    $textbounding = $image->writeTextAndGetBoundingBox('(/)Speed: ', '../include/font.ttf', $fontsize, '#00000066', 420, 800-$fontsize-$bottomBorder, "left", "top");
-    // Array ( [top-left] => Array ( [x] => 22 [y] => 679 ) [top-right] => Array ( [x] => 182 [y] => 679 ) [bottom-left] => Array ( [x] => 22 [y] => 718 ) [bottom-righ] => Array ( [x] => 182 [y] => 718 ) [baseline] => Array ( [x] => 20 [y] => 718 ) )
-       $textbounding = $image->writeTextAndGetBoundingBox(round($stravaActivity["average_speed"],1). "km/h", '../include/font.ttf', $fontsize, '#00000066',  780, 800-$fontsize-$bottomBorder, "right", "top"); //x: $textbounding["top-right"]["x"]
-    
-
-
-   
-    
-
-    $image->saveJPG('../images/'.$heroimageFilename,82);
-
-    
-
-    
-  
- 
+                    
                 } else {
                     error_log("strava activity does not have map data",0);
 
                 }
-             
+                  
+                $activity->setFkiduser($user->getId());
+                $activity->setCreationdate(new DateTime());
+                $activity->setStrava_activity_id($stravaActivity["id"]);
+                $activity->setText($stravaActivity["name"]);
+                
+                $orm->save($activity);
 
-                //                 Array
-                // (
-                //     [resource_state] => 2
-                //     [athlete] => Array
-                //         (
-                //             [id] => 2321457
-                //             [resource_state] => 1
-                //         )
 
-                //     [name] => Pullach im Isartal -  Evening Gravel Ride
-                //     [distance] => 5000.5
-                //     [moving_time] => 1273
-                //     [elapsed_time] => 1297
-                //     [total_elevation_gain] => 17
-                //     [type] => Ride
-                //     [sport_type] => GravelRide
-                //     [workout_type] => 
-                //     [id] => 9308924239
-                //     [start_date] => 2023-06-21T17:18:45Z
-                //     [start_date_local] => 2023-06-21T19:18:45Z
-                //     [timezone] => (GMT+01:00) Europe/Berlin
-                //     [utc_offset] => 7200
-                //     [location_city] => 
-                //     [location_state] => 
-                //     [location_country] => Germany
-                //     [achievement_count] => 0
-                //     [kudos_count] => 2
-                //     [comment_count] => 0
-                //     [athlete_count] => 1
-                //     [photo_count] => 0
-                //     [map] => Array
-                //         (
-                //             [id] => a9308924239
-                //             [summary_polyline] => {xmdHsqieA_ArBYd@_@v@o@hAe@pAwB|Ee@|AWj@Mb@e@hB]`Ag@~AQd@sAnF_AjDQf@Oz@y@vC{@nDkAbEoAdFUt@Qv@Eb@Sv@AJ@JNTd@Tj@b@l@j@fApAV^Xv@Zh@X\j@f@T`@`@d@XTJLTx@P`AJXb@jCr@hHJrB@n@DTHFD?^G`@C\KbAIF@D^JTJj@PlAL\RZpCfC\Ft@`An@p@FTGd@@l@Yn@ANTj@XtA@z@HfANx@BDH@XGN@j@Vx@J`@Bb@HPN^Np@J^CJ@JNHPDj@Jp@?lDCTCp@AnBG`@Ux@GPS\wApE}@`CS^K^[|@]dAu@fAQ?_@OG?GBMNw@rBs@`B_@hAeCnG[j@Cd@R\DXAPMPCXElCBl@Ed@?~@Y~BAPBz@Cl@KFMBeCHkACMJGP
-                //             [resource_state] => 2
-                //         )
-
-                //     [trainer] => 
-                //     [commute] => 
-                //     [manual] => 
-                //     [private] => 
-                //     [visibility] => everyone
-                //     [flagged] => 
-                //     [gear_id] => b6717517
-                //     [start_latlng] => Array
-                //         (
-                //             [0] => 48.08
-                //             [1] => 11.53
-                //         )
-
-                //     [end_latlng] => Array
-                //         (
-                //             [0] => 48.09
-                //             [1] => 11.48
-                //         )
-
-                //     [average_speed] => 3.928
-                //     [max_speed] => 6.492
-                //     [average_cadence] => 53.6
-                //     [average_temp] => 28
-                //     [average_watts] => 53.3
-                //     [max_watts] => 330
-                //     [weighted_average_watts] => 74
-                //     [kilojoules] => 67.8
-                //     [device_watts] => 1
-                //     [has_heartrate] => 
-                //     [heartrate_opt_out] => 
-                //     [display_hide_heartrate_option] => 
-                //     [elev_high] => 574.8
-                //     [elev_low] => 564.6
-                //     [upload_id] => 9985732414
-                //     [upload_id_str] => 9985732414
-                //     [external_id] => garmin_ping_280705960980
-                //     [from_accepted_tag] => 
-                //     [pr_count] => 0
-                //     [total_photo_count] => 0
-                //     [has_kudoed] => 
+               
 
  
 
