@@ -14,3 +14,21 @@ CREATE TABLE `tuser` (
   UNIQUE KEY `name` (`name`),
   UNIQUE KEY `logintoken` (`logintoken`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+
+
+
+
+
+CREATE TABLE `tactivity` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `creationdate` datetime NOT NULL,
+  `fkiduser` int unsigned NOT NULL,
+  `strava_activity_id` int NOT NULL,
+  `heroImage` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `text` varchar(1024) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `iduser` (`fkiduser`),
+  CONSTRAINT `activity-user` FOREIGN KEY (`fkiduser`) REFERENCES `tuser` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
