@@ -1,9 +1,11 @@
 <?php
 require_once('../include/db.inc.php');
+include $basedir.'/vendor/autoload.php';
+
+
 require_once('../include/images.inc.php');
 
 require_once($basedir.'/include/loggedin.inc.php');
-include $basedir.'/vendor/autoload.php';
 
 require_once($basedir.'/include/db_tuser.inc.php');
 require_once($basedir.'/include/db_tactivity.inc.php');
@@ -29,8 +31,8 @@ use \DantSu\OpenStreetMapStaticAPI\Markers;
 
 // configuration for the oauth calls
 $options = [
-    'clientId'     => $stravaCLientID,
-    'clientSecret' => $stravaAppToken,
+    'clientId'     => $STRAVA_CLIENT_ID,
+    'clientSecret' => $STRAVA_CLIENT_SECRET,
     'redirectUri'  => $stravaRedirectURI
 ];
 

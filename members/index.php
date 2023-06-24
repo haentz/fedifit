@@ -38,8 +38,8 @@ if ($user->getStravaAccessToken()==null) {
 
     try {
         $options = [
-            'clientId'     => $stravaCLientID,
-            'clientSecret' => $stravaAppToken,
+            'clientId'     => $STRAVA_CLIENT_ID,
+            'clientSecret' => $STRAVA_CLIENT_SECRET,
             'redirectUri'  => $stravaRedirectURI
         ];
         $oauth = new OAuth($options);
