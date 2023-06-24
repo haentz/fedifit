@@ -16,6 +16,10 @@ use \DantSu\OpenStreetMapStaticAPI\LatLng;
 use \DantSu\OpenStreetMapStaticAPI\Line;
 use \DantSu\OpenStreetMapStaticAPI\Markers;
 
+
+
+
+
 //print_r($_GET);
 //Array ( [state] => b2912cd7a79f2525a8dc3c1d1be34038 [code] => 7771f377e08337d1224bc9d75394279d149fd5ab [scope] => read,activity:read ) 86f19527f724c7f14ab6628b1da17dbd10e03251
 
@@ -155,7 +159,7 @@ League\OAuth2\Client\Token\AccessToken Object ( [accessToken:protected] => 1ee46
 
 
 
-$lineToDraw = new Line('FF0000', 2);
+$lineToDraw = new Line('FF0000DD', 2);
 
 foreach($points as $point) {
     
@@ -164,13 +168,35 @@ foreach($points as $point) {
 
 
 
-    $image = (new OpenStreetMap(new LatLng($middlePoint->getLatitude(), $middlePoint->getLongitude()), $zoomLevel, 800, 800))
+$image = (new OpenStreetMap(new LatLng($middlePoint->getLatitude(), $middlePoint->getLongitude()), $zoomLevel, 800, 800))
    
     ->addDraw($lineToDraw)
     ->getImage();
+    
+   $fontsize = 50;
+    $bottomBorder = 60;
+    $textbounding = $image->writeTextAndGetBoundingBox("Duration: ", '../include/font.ttf', $fontsize, '#00000066', 20 , 800-$fontsize*2-$bottomBorder-20, "left", "top");
+    $minutes = floor($stravaActivity["moving_time"]/60);
+    $textbounding = $image->writeTextAndGetBoundingBox(intdiv($minutes, 60).':'. ($minutes % 60) . "h", '../include/font.ttf', $fontsize, '#00000066', 380 , 800-$fontsize*2-$bottomBorder-20, "right", "top");
+ 
+   $textbounding = $image->writeTextAndGetBoundingBox('Distance: ', '../include/font.ttf', $fontsize, '#00000066', 20, 800-$fontsize-$bottomBorder, "left", "top");
+ // Array ( [top-left] => Array ( [x] => 22 [y] => 679 ) [top-right] => Array ( [x] => 182 [y] => 679 ) [bottom-left] => Array ( [x] => 22 [y] => 718 ) [bottom-right] => Array ( [x] => 182 [y] => 718 ) [baseline] => Array ( [x] => 20 [y] => 718 ) )
+    $textbounding = $image->writeTextAndGetBoundingBox(floor($stravaActivity["distance"]/1000). "km", '../include/font.ttf', $fontsize, '#00000066',  380, 800-$fontsize-$bottomBorder, "right", "top"); //x: $textbounding["top-right"]["x"]
+    
 
-    $image->drawRectangle(0, 600, 800, 800, '#FF0000DD');
 
+    $textbounding = $image->writeTextAndGetBoundingBox('Ascend: ', '../include/font.ttf', $fontsize, '#00000066', 420, 800-$fontsize*2-$bottomBorder-20, "left", "top");
+    // Array ( [top-left] => Array ( [x] => 22 [y] => 679 ) [top-right] => Array ( [x] => 182 [y] => 679 ) [bottom-left] => Array ( [x] => 22 [y] => 718 ) [bottom-right] => Array ( [x] => 182 [y] => 718 ) [baseline] => Array ( [x] => 20 [y] => 718 ) )
+    $textbounding = $image->writeTextAndGetBoundingBox($stravaActivity["total_elevation_gain"] . "m", '../include/font.ttf', $fontsize, '#00000066', 780 , 800-$fontsize*2-$bottomBorder-20, "right", "top");
+ 
+    $textbounding = $image->writeTextAndGetBoundingBox('(/)Speed: ', '../include/font.ttf', $fontsize, '#00000066', 420, 800-$fontsize-$bottomBorder, "left", "top");
+    // Array ( [top-left] => Array ( [x] => 22 [y] => 679 ) [top-right] => Array ( [x] => 182 [y] => 679 ) [bottom-left] => Array ( [x] => 22 [y] => 718 ) [bottom-righ] => Array ( [x] => 182 [y] => 718 ) [baseline] => Array ( [x] => 20 [y] => 718 ) )
+       $textbounding = $image->writeTextAndGetBoundingBox(round($stravaActivity["average_speed"],1). "km/h", '../include/font.ttf', $fontsize, '#00000066',  780, 800-$fontsize-$bottomBorder, "right", "top"); //x: $textbounding["top-right"]["x"]
+    
+
+
+   
+    
 
     $image->saveJPG('../images/'.$heroimageFilename,82);
 
