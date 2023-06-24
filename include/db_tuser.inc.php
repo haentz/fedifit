@@ -21,7 +21,7 @@ class User extends Entity  implements IMappableEntity
         return $this->orm()->getColumn('id');
     }
         
-    public function setId(string $id): self
+    public function setId(int $id): self
     {
         $this->orm()->setColumn('id', $id);
         return $this;

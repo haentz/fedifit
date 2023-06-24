@@ -30,43 +30,56 @@ if($error==1) { ?>
 <b>Please set sufficient permissions on Strava.</b><br>
 
 <?php } ?>
-<?= $user->getName() ?>
+Hello <?= $user->getName() ?>!
 <?php
 
 if ($user->getStravaAccessToken()==null) {
 // if not connected to strava… {}
 
-try {
-    $options = [
-        'clientId'     => $stravaCLientID,
-        'clientSecret' => $stravaAppToken,
-        'redirectUri'  => $stravaRedirectURI
-    ];
-    $oauth = new OAuth($options);
+    try {
+        $options = [
+            'clientId'     => $stravaCLientID,
+            'clientSecret' => $stravaAppToken,
+            'redirectUri'  => $stravaRedirectURI
+        ];
+        $oauth = new OAuth($options);
 
-  
-        print '<a href="'.$oauth->getAuthorizationUrl([
-            // Uncomment required scopes.
-            'scope' => [
-                //'read',
-                // 'read_all',
-                // 'profile:read_all',
-                // 'profile:write',
-                 'activity:read',
-                // 'activity:read_all',
-                // 'activity:write',
-            ]
-        ]).'">Connect</a>';
- 
-} catch(Exception $e) {
-    print $e->getMessage();
-}
-}
+    
+            print '<div class=\"authorize_button\"><a href="'.$oauth->getAuthorizationUrl([
+                // Uncomment required scopes.
+                'scope' => [
+                    //'read',
+                    // 'read_all',
+                    // 'profile:read_all',
+                    // 'profile:write',
+                    'activity:read',
+                    // 'activity:read_all',
+                    // 'activity:write',
+                ]
+            ]).'">Connect to Strava</a></div>';
+    
+    } catch(Exception $e) {
+        print $e->getMessage();
+    }
+} else  { ?>
 
-// else 
+Recent rides synced from Strava: <br>
+<ul class="ridelist">
+
+
+
+
+</ul>
+
+
+<?php
+} // ende else
 
 
 // show last x posts, pagination, delete individual posts
+
+
+
 // link to "delete all posts"
 // link to disconnect strava
 // link to "delete account"

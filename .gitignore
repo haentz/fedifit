@@ -1,3 +1,4 @@
 .DS_Store
 /vendor
+/images
 /include/DO_NOT_DEPLOY.php

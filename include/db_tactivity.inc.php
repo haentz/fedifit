@@ -1,5 +1,14 @@
 <?php
 
+use Opis\Database\Connection;
+
+use Opis\ORM\{
+    Entity, 
+    EntityManager,
+    IEntityMapper,
+    IMappableEntity
+};
+
 class Activity extends Entity  implements IMappableEntity
 {
 
@@ -12,12 +21,18 @@ class Activity extends Entity  implements IMappableEntity
     {
         return $this->orm()->getColumn('id');
     }
+
+    public function setId(string $id): self
+    {
+        $this->orm()->setColumn('id', $id);
+        return $this;
+    }
         
     /**
      * Get user's id
      * @return integer
      */
-    public function getFkiduser(): string
+    public function getFkiduser(): int
     {
         return $this->orm()->getColumn('fkiduser');
     }
@@ -27,37 +42,15 @@ class Activity extends Entity  implements IMappableEntity
      * @param integer $fkiduser
      * @return User
      */
-    public function setFkiduser(string $fkiduser): self
+    public function setFkiduser(int $fkiduser): self
     {
         $this->orm()->setColumn('fkiduser', $fkiduser);
         return $this;
     }
 
 
-     /**
-     * Get activity hash
-     * @return string
-     */
-    public function getHash(): string
-    {
-        return $this->orm()->getColumn('hash');
-    }
-
     /**
-     * Set activity hash
-     * @param string $hash
-     * @return activity
-     */
-    public function setHash(string $hash): self
-    {
-        $this->orm()->setColumn('hash', $hash);
-        return $this;
-    }
-
-
-/**
-     * Get user's name
-     * @return date
+    * creationdate
      */
     public function getCreationdate(): DateTime
     {
@@ -65,9 +58,7 @@ class Activity extends Entity  implements IMappableEntity
     }
 
     /**
-     * Set user's name
-     * @param string $fkiduser
-     * @return User
+    *
      */
     public function setCreationdate(DateTime $creationdate): self
     {
@@ -75,82 +66,57 @@ class Activity extends Entity  implements IMappableEntity
         return $this;
     }
 
-
-/**
-     * Get user's name
-     * @return date
+    /**
+    * strava_activity_id
      */
-    public function getActivitydate(): DateTime
+    public function getStrava_activity_id(): int
     {
-        return $this->orm()->getColumn('activitydate');
+        return $this->orm()->getColumn('strava_activity_id');
     }
 
     /**
-     * Set user's name
-     * @param string $fkiduser
-     * @return User
+    *
      */
-    public function setActivitydate(DateTime     $activitydate): self
+    public function setStrava_activity_id(int $strava_activity_id): self
     {
-        $this->orm()->setColumn('activitydate', $activitydate);
+        $this->orm()->setColumn('strava_activity_id', $strava_activity_id);
         return $this;
     }
 
 
-
-
-  public function getActivityfile(): string
-  {
-      return $this->orm()->getColumn('activityfile');
-  }      // User entity
-
-    public function setActivityfile(String     $activityfile): self
+    /**
+    *heroImage
+     */
+    public function getHeroImage(): string
     {
-        $this->orm()->setColumn('activityfile', $activityfile);
-        return $this;
+        return $this->orm()->getColumn('heroImage');
     }
 
-
-
-
-
-    public function getDistance(): int
+    /**
+    *heroImage
+     */
+    public function setHeroImage(string $heroImage): self
     {
-        return $this->orm()->getColumn('distance');
-    }      // User entity
-  
-      public function setDistance(int     $distance): self
-      {
-          $this->orm()->setColumn('distance', $distance);
-          return $this;
-      }
-  
-
-
-  public function getDuration(): int
-  {
-      return $this->orm()->getColumn('duration');
-  }      // User entity
-
-    public function setDuration(int     $duration): self
-    {
-        $this->orm()->setColumn('duration', $duration);
+        $this->orm()->setColumn('heroImage', $heroImage);
         return $this;
     }
-
-
-  public function getAscend(): int
-  {
-      return $this->orm()->getColumn('ascend');
-  }      // User entity
-
-    public function setAscend(int     $ascend): self
+        /**
+    *
+     */
+    public function getText(): string
     {
-        $this->orm()->setColumn('ascend', $ascend);
-        return $this;
+        return $this->orm()->getColumn('text');
     }
 
-
+    /**
+    *
+     */
+    public function setText(string $text): self
+    {
+        $this->orm()->setColumn('text', $text);
+        return $this;
+    }
+        
 
 
 
@@ -163,14 +129,10 @@ class Activity extends Entity  implements IMappableEntity
       $mapper->cast([
            'id' => 'integer',
            'fkiduser' => 'integer',
-           'hash' => 'string',
            'creationdate' => 'date',
-           'activitydate' => 'date',
-           'activityfile' => 'string',
-           'distance' => 'int',
-           'duration' => 'integer',
-           'ascend' => 'integer',
-           'mapimage' => 'string'
+           'strava_activity_id' => 'integer',
+           'heroImage' => 'string',
+           'text' => 'string'
        ]);
 
    
