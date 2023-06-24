@@ -15,15 +15,15 @@ if (isset($_GET['hub.challenge']) && $_GET["hub.verify_token"]=="STRAVAhans111!"
 }
 // do this with curl in command line:
 // $client_id = '5';
-// $client_secret = '7b2946535949ae70f015d696d8ac602830ece412';
+// $client_secret = $STRAVA_CLIENT_SECRET;
 // $callback_url = 'http://a-valid.com/url/webhook.php'; /* this should be the same URL as this page */
 // $verify_token = 'STRAVA';
 
 // curl -X POST https://www.strava.com/api/v3/push_subscriptions \
 // -F client_id=95919 \
-// -F client_secret=eab50ca138d57e2e43019c960e3351c35aa39b2f \
+// -F client_secret=$STRAVA_CLIENT_SECRET  \
 // -F callback_url=http://a-valid.com/url \
-// -F verify_token=STRAVAhans111!
+// -F verify_token=$STRAVA_VERIFY_TOKEN
 
 
 // $curl = curl_init();

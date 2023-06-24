@@ -21,7 +21,7 @@ if($name==""   || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
 } else {
 
   require_once('include/db_tuser.inc.php');
-  require_once("../DO_NOT_DEPLOY.php");
+  
   $user = $orm->create(User::class);
   
   $user =  $orm(User::class)->where('email')->is($email)->get();
