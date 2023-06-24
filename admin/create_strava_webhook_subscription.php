@@ -2,9 +2,11 @@
 // https://developers.strava.com/docs/webhooks/
 
 //https://www.curtiscode.dev/post/project/displaying-strava-stats-using-webhooks/
+error_log("request to webhook url: ".print_r($_POST));
 
-if (isset($_GET['hub_challenge'])) {
-    $data = ['hub.challenge' => $_GET['hub_challenge']];
+if (isset($_GET['hub.challenge']) && $_GET["hub.verify_token"]=="STRAVAhans111!") {
+    $data = ['hub.challenge' => $_GET['hub.challenge']];
+    error_log("webhook challenge: ".print_r($_GET));
     header("HTTP/1.1 200 OK");
     header('Content-Type: application/json; charset=utf-8');
     echo json_encode($data);
@@ -16,6 +18,13 @@ if (isset($_GET['hub_challenge'])) {
 // $client_secret = '7b2946535949ae70f015d696d8ac602830ece412';
 // $callback_url = 'http://a-valid.com/url/webhook.php'; /* this should be the same URL as this page */
 // $verify_token = 'STRAVA';
+
+// curl -X POST https://www.strava.com/api/v3/push_subscriptions \
+// -F client_id=95919 \
+// -F client_secret=eab50ca138d57e2e43019c960e3351c35aa39b2f \
+// -F callback_url=http://a-valid.com/url \
+// -F verify_token=STRAVAhans111!
+
 
 // $curl = curl_init();
 
