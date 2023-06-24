@@ -1,4 +1,4 @@
-# --fedifit--Fedirides
+# -fedifit-Fedirides
 Strava to Activitypub Gateway
 
 Very much work in progress
