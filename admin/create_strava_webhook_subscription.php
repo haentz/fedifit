@@ -3,8 +3,6 @@
 
 //https://www.curtiscode.dev/post/project/displaying-strava-stats-using-webhooks/
 
-error_log('a');
-
 if (isset($_GET['hub_challenge'])) {
     $data = ['hub.challenge' => $_GET['hub_challenge']];
     error_log("webhook challenge: ");
@@ -15,9 +13,20 @@ if (isset($_GET['hub_challenge'])) {
     exit;
 } else {
     $jsonData= json_decode(file_get_contents("php://input"));
-    error_log('b');
+   
     error_log("New webhook call: " . print_r($jsonData,true));
-//     $activities = $client->getAthleteActivities();
+
+    if($jsonData->aspect_type=="create") {
+        
+        // get activity for $jsonData->object_id
+        
+
+    } else if($jsonData->aspect_type=="update") {
+
+    } else if($jsonData->aspect_type=="delete") {
+
+    }
+    //     $activities = $client->getAthleteActivities();
 
 
 // if(count($activities)>0) {
