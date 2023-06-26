@@ -54,7 +54,14 @@ function saveRouteToImage($route, $filename, $mapstyle=1, $style=1):boolean {
         $lineToDraw->addPoint(new LatLng($point[0], $point[1]));
     }
 
+    $tileserver = "https://stamen-tiles.a.ssl.fastly.net/terrain/{z}/{x}/{y}.jpg";
 
+    $tileLayer1 = (new TileLayer(
+        $tileserver,
+        'Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under ODbL.',
+        '0123'
+    ));
+    
 
     $image = (new OpenStreetMap(new LatLng($middlePoint->getLatitude(), $middlePoint->getLongitude()), $zoomLevel, 800, 800))
         ->addDraw($lineToDraw)

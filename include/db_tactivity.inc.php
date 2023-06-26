@@ -9,7 +9,7 @@ use Opis\ORM\{
     IMappableEntity
 };
 
-class Activity extends Entity  implements IMappableEntity
+class DBActivity extends Entity  implements IMappableEntity
 {
 
 
@@ -118,7 +118,35 @@ class Activity extends Entity  implements IMappableEntity
     }
         
 
+    /**
+    *released
+     */
+    public function getReleased(): int
+    {
+        return $this->orm()->getColumn('released');
+    }
 
+  
+    public function setReleased(int $released): self
+    {
+        $this->orm()->setColumn('released', $released);
+        return $this;
+    }
+
+    /**
+    *released
+     */
+    public function getDownloaded(): int
+    {
+        return $this->orm()->getColumn('downloaded');
+    }
+
+  
+    public function setDownloaded(int $downloaded): self
+    {
+        $this->orm()->setColumn('downloaded', $downloaded);
+        return $this;
+    }
 
    public static function mapEntity(IEntityMapper $mapper)
    {
@@ -130,6 +158,8 @@ class Activity extends Entity  implements IMappableEntity
            'id' => 'integer',
            'fkiduser' => 'integer',
            'creationdate' => 'date',
+           'released' => 'int',
+           'downloaded' => 'int',
            'strava_activity_id' => 'integer',
            'heroImage' => 'string',
            'text' => 'string'

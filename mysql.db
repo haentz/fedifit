@@ -9,12 +9,12 @@ CREATE TABLE `tuser` (
   `strava_refresh_token` varchar(255) DEFAULT NULL,
   `strava_access_token` varchar(255) DEFAULT NULL,
   `strava_access_token_expirationdate` datetime DEFAULT NULL,
+  `confirmed` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`),
   UNIQUE KEY `name` (`name`),
   UNIQUE KEY `logintoken` (`logintoken`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 
@@ -25,10 +25,13 @@ CREATE TABLE `tactivity` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `creationdate` datetime NOT NULL,
   `fkiduser` int unsigned NOT NULL,
-  `strava_activity_id` int NOT NULL,
+  `strava_activity_id` bigint unsigned NOT NULL,
   `heroImage` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `text` varchar(1024) DEFAULT NULL,
+  `text` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `released` tinyint(1) NOT NULL,
+  `downloaded` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `iduser` (`fkiduser`),
-  CONSTRAINT `activity-user` FOREIGN KEY (`fkiduser`) REFERENCES `tuser` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  UNIQUE KEY `unq_strava_activity_id` (`strava_activity_id`),
+  UNIQUE KEY `unq_heroimage` (`heroImage`),
+  KEY `iduser` (`fkiduser`)
+) ENGINE=InnoDB AUTO_INCREMENT=95 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

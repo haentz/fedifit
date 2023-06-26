@@ -2,9 +2,8 @@
 // https://developers.strava.com/docs/webhooks/
 
 //https://www.curtiscode.dev/post/project/displaying-strava-stats-using-webhooks/
-error_log("request to webhook url: ".file_get_contents("php://input"));
 
-
+error_log('a');
 
 if (isset($_GET['hub_challenge'])) {
     $data = ['hub.challenge' => $_GET['hub_challenge']];
@@ -14,6 +13,25 @@ if (isset($_GET['hub_challenge'])) {
     echo json_encode($data);
     
     exit;
+} else {
+    $jsonData= json_decode(file_get_contents("php://input"));
+    error_log('b');
+    error_log("New webhook call: " . print_r($jsonData,true));
+//     $activities = $client->getAthleteActivities();
+
+
+// if(count($activities)>0) {
+//     // todo check if strava_activity_id already in db!
+
+//     foreach($activities as $activity) {
+//         $activity = $orm->create(DBActivity::class);
+//         $activity->setFkiduser($user->getId());
+//         $activity->setCreationdate(new DateTime());
+//         $activity->setStrava_activity_id($stravaActivity["id"]);
+//         $activity->setReleased(0);
+//         $activity->setDownloaded(0);
+//         $orm->save($activity);
+//     }
 }
 // do this with curl in command line:
 // $client_id = '5';

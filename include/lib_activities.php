@@ -1,6 +1,35 @@
 <?php
 
+Class Activity {
+    
+    public int $stravaId;
+    public int $stravaAthleteId;
+    public String $name;
+    public int $distance;
+    public int $movingTime;
+    public int $elevationGain;
+    public int $averageSpeed;
+    public int $calories;
+    public String $summary_polyline;
 
+    // not parsed from strava:
+    public int $id;
+    public int $idUser; //fediride iduser
+    public String $text;
+
+    public function parseActivities(String $stravaActivity):Activity {
+        self.$stravaId = $stravaActivity['id'];
+        self.$stravaAthleteId = $stravaActivity['athlete']['id'];
+        self.$name = $stravaActivity['name'];
+        self.$distance = floor($stravaActivity['distance'])/1000;  // meters
+        self.$movingTime = floor($stravaActivity["moving_time"])/60;  // minutes
+        self.$elevationGain = $stravaActivity["total_elevation_gain"]; // meters
+        self.$averageSpeed = round($stravaActivity["average_speed"],1); // <km>
+        self.$calories = floor($stravaActivity['kilojoules']/4,184);
+        self.$summary_polyline = $stravaActivity['map']['summary_polyline'];
+    }
+
+}
 
 /* User
 
@@ -68,7 +97,7 @@
                 //     [average_watts] => 53.3
                 //     [max_watts] => 330
                 //     [weighted_average_watts] => 74
-                //     [kilojoules] => 67.8
+                //     [kilojoules] => 67.8   Energie durch 4,184 dividieren -> kalorien
                 //     [device_watts] => 1
                 //     [has_heartrate] => 
                 //     [heartrate_opt_out] => 
@@ -85,4 +114,12 @@
 
  
                 */
+
+
+function loadActivity(int $stravaActivityId) {
+
+
+    
+
+}
 ?>

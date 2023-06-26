@@ -79,8 +79,8 @@ League\OAuth2\Client\Token\AccessToken Object ( [accessToken:protected] => 1ee46
         $user->setStravaAccessToken($token->getToken());
         $expiretime=new DateTime();
         $expiretime->setTimestamp($token->getExpires());
-        $user->setStravaRefreshToken($token->getRefreshToken());
         $user->setStravaExpirationdate($expiretime);
+        $user->setStravaRefreshToken($token->getRefreshToken());
         $user->setStravaId($token->getValues()['athlete']['id']);
 
         $orm->save($user); 
@@ -104,32 +104,40 @@ League\OAuth2\Client\Token\AccessToken Object ( [accessToken:protected] => 1ee46
             if(count($activities)>0) {
                 // todo check if strava_activity_id already in db!
 
-
-
-                $stravaActivity = $activities[0];
-                $activity = $orm->create(Activity::class);
-                
-                 //TODO: clean up code in libraries
-                 if($stravaActivity["map"]["summary_polyline"]!="") {
-                    error_log("strava activity has map data",0);
-                    
-                    $heroimageFilename = hash('ripemd128', "heroimagesalt".$user->getId().time()).".jpg"; 
-                    
-                    if(saveRouteToImage($stravaActivity["map"]["summary_polyline"],$heroimageFilename)) {
-                        $activity->setHeroImage($heroimageFilename);
-                    }
-                    
-                } else {
-                    error_log("strava activity does not have map data",0);
-
+                foreach($activities as $activity) {
+                    $activity = $orm->create(DBActivity::class);
+                    $activity->setFkiduser($user->getId());
+                    $activity->setCreationdate(new DateTime());
+                    $activity->setStrava_activity_id($stravaActivity["id"]);
+                    $activity->setReleased(0);
+                    $activity->setDownloaded(0);
+                    $orm->save($activity);
                 }
-                  
-                $activity->setFkiduser($user->getId());
-                $activity->setCreationdate(new DateTime());
-                $activity->setStrava_activity_id($stravaActivity["id"]);
-                $activity->setText($stravaActivity["name"]);
+
+                // $stravaActivity = $activities[0];
+                // $activity = $orm->create(Activity::class);
                 
-                $orm->save($activity);
+                //  //TODO: clean up code in libraries
+                //  if($stravaActivity["map"]["summary_polyline"]!="") {
+                //     error_log("strava activity has map data",0);
+                    
+                //     $heroimageFilename = hash('ripemd128', "heroimagesalt".$user->getId().time()).".jpg"; 
+                    
+                //     if(saveRouteToImage($stravaActivity["map"]["summary_polyline"],$heroimageFilename)) {
+                //         $activity->setHeroImage($heroimageFilename);
+                //     }
+                    
+                // } else {
+                //     error_log("strava activity does not have map data",0);
+
+                // }
+                  
+                // $activity->setFkiduser($user->getId());
+                // $activity->setCreationdate(new DateTime());
+                // $activity->setStrava_activity_id($stravaActivity["id"]);
+                // $activity->setText($stravaActivity["name"]);
+                
+                // $orm->save($activity);
 
 
                

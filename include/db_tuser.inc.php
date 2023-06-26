@@ -174,6 +174,7 @@ class User extends Entity  implements IMappableEntity
           'email' => 'string',
           'name' => 'string',
           'creationdate' => 'date',
+          'confirmed' => 'int',
           'logintoken' => 'string',
           'logintokencreationdate' => 'date',
           `strava_athlete_id` => 'integer',
