@@ -3,6 +3,7 @@ require_once('../include/db.inc.php');
 require_once($basedir.'/include/loggedin.inc.php');
 include $basedir.'/vendor/autoload.php';
 require_once($basedir.'/include/db_tuser.inc.php');
+require_once($basedir.'/include/lib_strava.php');
 
 use Strava\API\OAuth;
 use Strava\API\Exception;
@@ -61,7 +62,12 @@ if ($user->getStravaAccessToken()==null) {
     } catch(Exception $e) {
         print $e->getMessage();
     }
-} else  { ?>
+} else  { 
+    
+    getNewActivity(9336857994, $iduser);
+    
+    
+    ?>
 
 Recent rides synced from Strava: <br>
 <ul class="ridelist">

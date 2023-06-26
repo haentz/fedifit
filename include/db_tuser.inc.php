@@ -150,7 +150,8 @@ class User extends Entity  implements IMappableEntity
   */
   public function getStravaExpirationdate(): ?DateTime
   {
-      return $this->orm()->getColumn('strava_access_token_expirationdate');
+
+      return new DateTime($this->orm()->getColumn('strava_access_token_expirationdate'));
   }
       
   public function setStravaExpirationdate(DateTime $strava_access_token_expirationdate): self
@@ -166,7 +167,7 @@ class User extends Entity  implements IMappableEntity
   public static function mapEntity(IEntityMapper $mapper)
   {
    
-     $mapper->table('tuser');
+    $mapper->table('tuser');
    
      
      $mapper->cast([
@@ -183,7 +184,7 @@ class User extends Entity  implements IMappableEntity
           `strava_access_token_expirationdate`  => '?date'
       ]);
 
-  
+    
 
 
 
