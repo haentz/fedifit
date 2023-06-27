@@ -3,7 +3,7 @@ require_once('../include/db.inc.php');
 include $basedir.'/vendor/autoload.php';
 
 
-require_once('../include/images.inc.php');
+require_once('../include/lib_images.inc.php');
 
 require_once($basedir.'/include/loggedin.inc.php');
 

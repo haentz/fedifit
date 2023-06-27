@@ -21,10 +21,10 @@ Class Activity {
         $this->stravaId = $stravaActivity['id'];
         $this->stravaAthleteId = $stravaActivity['athlete']['id'];
         $this->name = $stravaActivity['name'];
-        $this->distance = floor($stravaActivity['distance'])/1000;  // meters
+        $this->distance = floor($stravaActivity['distance']/1000);  // meters
         $this->movingTime = floor($stravaActivity["moving_time"])/60;  // minutes
         $this->elevationGain = $stravaActivity["total_elevation_gain"]; // meters
-        $this->averageSpeed = round($stravaActivity["average_speed"],1); // <km>
+        $this->averageSpeed = round($this->distance/$this->movingTime*60,1); // <km>
         $this->calories = floor($stravaActivity['kilojoules']/4);
         $this->summary_polyline = $stravaActivity['map']['summary_polyline'];
 
