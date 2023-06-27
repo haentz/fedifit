@@ -9,7 +9,9 @@ use \DantSu\OpenStreetMapStaticAPI\TileLayer;
 
 
 // todo: exceptions!
-function saveRouteToImage($route, $filename, $mapstyle=1, $style=1):bool {
+function saveRouteToImage($stravaActivity, $filename, $mapstyle=1, $style=1):bool {
+    //error_log(print_r($stravaActivity, true));
+    $route = $stravaActivity->summary_polyline;
 
     $points = Polyline::decode($route);
     $points = Polyline::pair($points);
@@ -43,7 +45,7 @@ function saveRouteToImage($route, $filename, $mapstyle=1, $style=1):bool {
     if ($maxDiff < 360 / pow(2, 20)) {
         $zoomLevel = 21;
     } else {
-        $zoomLevel = (int) (-1*( (log($maxDiff/2)/log(2)) - (log(360)/log(2))));
+        $zoomLevel = (int) (-1*( (log($maxDiff)/log(2)) - (log(360)/log(2))));
         if ($zoomLevel < 1)
             $zoomLevel = 1;
     }
@@ -62,38 +64,39 @@ function saveRouteToImage($route, $filename, $mapstyle=1, $style=1):bool {
         $lineToDraw->addPoint(new LatLng($point[0], $point[1]));
     }
 
-    $tileserver = "https://stamen-tiles.a.ssl.fastly.net/terrain/{z}/{x}/{y}.jpg";
+    // $tileserver = "https://stamen-tiles.a.ssl.fastly.net/terrain/{z}/{x}/{y}.jpg";
 
-    $tileLayer1 = (new TileLayer(
-        $tileserver,
-        'Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under ODbL.',
-        '0123'
-    ));
+    // $tileLayer1 = (new TileLayer(
+    //     $tileserver,
+    //     'Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under ODbL.',
+    //     '0123'
+    // ));
     
 
+//todo: find max boundiung rect and trim image
+
     $image = (new OpenStreetMap(new LatLng($middlePoint->getLatitude(), $middlePoint->getLongitude()), $zoomLevel, 800, 800))
-        
         ->addDraw($lineToDraw)
         ->getImage();
         
-    
+   
     if ($style==1)  {
         
         $fontsize = 50;
         $bottomBorder = 60;
 
         $textbounding = $image->writeTextAndGetBoundingBox("Duration: ", '../include/font.ttf', $fontsize, '#00000066', 20 , 800-$fontsize*2-$bottomBorder-20, "left", "top");
-        $minutes = floor($stravaActivity["moving_time"]/60);
+        $minutes = $stravaActivity->movingTime;
         $textbounding = $image->writeTextAndGetBoundingBox(intdiv($minutes, 60).':'. ($minutes % 60) . "h", '../include/font.ttf', $fontsize, '#00000066', 380 , 800-$fontsize*2-$bottomBorder-20, "right", "top");
         
         $textbounding = $image->writeTextAndGetBoundingBox('Distance: ', '../include/font.ttf', $fontsize, '#00000066', 20, 800-$fontsize-$bottomBorder, "left", "top");
-        $textbounding = $image->writeTextAndGetBoundingBox(floor($stravaActivity["distance"]/1000). "km", '../include/font.ttf', $fontsize, '#00000066',  380, 800-$fontsize-$bottomBorder, "right", "top"); //x: $textbounding["top-right"]["x"]
+        $textbounding = $image->writeTextAndGetBoundingBox(floor($stravaActivity->distance). "km", '../include/font.ttf', $fontsize, '#00000066',  380, 800-$fontsize-$bottomBorder, "right", "top"); //x: $textbounding["top-right"]["x"]
 
-        $textbounding = $image->writeTextAndGetBoundingBox('Ascend: ', '../include/font.ttf', $fontsize, '#00000066', 420, 800-$fontsize*2-$bottomBorder-20, "left", "top");
-        $textbounding = $image->writeTextAndGetBoundingBox($stravaActivity["total_elevation_gain"] . "m", '../include/font.ttf', $fontsize, '#00000066', 780 , 800-$fontsize*2-$bottomBorder-20, "right", "top");
+        // $textbounding = $image->writeTextAndGetBoundingBox('Ascend: ', '../include/font.ttf', $fontsize, '#00000066', 420, 800-$fontsize*2-$bottomBorder-20, "left", "top");
+        // $textbounding = $image->writeTextAndGetBoundingBox($stravaActivity["total_elevation_gain"] . "m", '../include/font.ttf', $fontsize, '#00000066', 780 , 800-$fontsize*2-$bottomBorder-20, "right", "top");
 
-        $textbounding = $image->writeTextAndGetBoundingBox('(/)Speed: ', '../include/font.ttf', $fontsize, '#00000066', 420, 800-$fontsize-$bottomBorder, "left", "top");
-        $textbounding = $image->writeTextAndGetBoundingBox(round($stravaActivity["average_speed"],1). "km/h", '../include/font.ttf', $fontsize, '#00000066',  780, 800-$fontsize-$bottomBorder, "right", "top"); //x: $textbounding["top-right"]["x"]
+        // $textbounding = $image->writeTextAndGetBoundingBox('(/)Speed: ', '../include/font.ttf', $fontsize, '#00000066', 420, 800-$fontsize-$bottomBorder, "left", "top");
+        // $textbounding = $image->writeTextAndGetBoundingBox(round($stravaActivity["average_speed"],1). "km/h", '../include/font.ttf', $fontsize, '#00000066',  780, 800-$fontsize-$bottomBorder, "right", "top"); //x: $textbounding["top-right"]["x"]
         
     }
    
@@ -101,7 +104,7 @@ function saveRouteToImage($route, $filename, $mapstyle=1, $style=1):bool {
 
 
     
-    $image->saveJPG('../images/'.$filename,82);
+    $image->saveJPG('../images/'.$filename,90);
     
     return true;
 }

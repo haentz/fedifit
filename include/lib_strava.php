@@ -2,6 +2,8 @@
 include $basedir.'/vendor/autoload.php';
 require_once('../include/db.inc.php');
 require_once $basedir.'/include/lib_activities.php';
+require_once $basedir.'/include/lib_images.inc.php';
+require_once($basedir.'/include/db_tactivity.inc.php');
 
 use Strava\API\OAuth;
 use Strava\API\Exception;
@@ -51,6 +53,61 @@ function refreshAccessToken(int $stravaIdUser, String $refreshToken) {
 }
 
 
+function saveActivity($stravaActivity, $user) {
+    global $orm;
+
+
+
+
+    $text = $stravaActivity->name;
+    $heroimageFilename = "";
+    // error_log("id".$stravaActivity->stravaId);
+    $activity =  $orm(ActivityTable::class)->where('strava_activity_id')->is($stravaActivity->stravaId)
+    ->get();
+
+   
+    //if activity_id does not exist yet, create new, otherwise it will be updates
+    if($activity==null){
+        error_log("Activity is new!");
+        $activity = $orm->create(ActivityTable::class);
+    } 
+    
+    
+    if($stravaActivity->summary_polyline!="") {
+    
+        error_log("strava activity has map data",0);
+            
+            $heroimageFilename = hash('ripemd128', "heroimagesalt".$user->getId().time()).".jpg"; 
+            
+            if(saveRouteToImage($stravaActivity,$heroimageFilename)) {
+                $activity->setHeroImage($heroimageFilename);
+            }
+            
+    } else {
+               
+            $heroimageFilename = null;
+            error_log("strava activity does not have map data",0);
+            $text.="<br>soundsoviele km";
+        
+    }
+
+
+
+   
+    $activity->setFkiduser($user->getId());
+    $activity->setCreationdate(new DateTime());
+    $activity->setStrava_activity_id($stravaActivity->stravaId);
+    $activity->setText($text);
+    if($heroimageFilename!=null) {
+        $activity->setHeroImage($heroimageFilename);
+    }
+    $activity->setReleased(1);
+    $activity->setDownloaded(1);
+   
+    $orm->save($activity);
+
+}
+
 
 function getNewActivity($activityId, $stravaiduser) {
     //test if $iduser accesstioken still valid
@@ -61,8 +118,7 @@ function getNewActivity($activityId, $stravaiduser) {
 
     //refresh access token
     $accesstokenValidtill = $user->getStravaExpirationdate();
-    error_log("getting new activity, accesstokenvalid?? :".print_r($accesstokenValidtill,true).":".
-    ($accesstokenValidtill<new DateTime()?"expired":"not expired"));
+    error_log("accesstoken ".($accesstokenValidtill<new DateTime()?"expired":"not expired"));
     if($accesstokenValidtill<new DateTime()) {
         //expired
         refreshAccessToken($user->getStravaId(),$user->getStravaRefreshToken());

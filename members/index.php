@@ -64,8 +64,8 @@ if ($user->getStravaAccessToken()==null) {
     }
 } else  { 
     ?><pre><?php
-    print_r(getNewActivity(9332359898, $iduser));
-    
+    $stravaActivity = getNewActivity(9332359898, $user->getStravaId());
+    saveActivity($stravaActivity, $user);
     
     ?>
 </pre>

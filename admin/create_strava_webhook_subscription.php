@@ -7,7 +7,6 @@ include $basedir.'/vendor/autoload.php';
 require_once($basedir.'/include/db_tuser.inc.php');
 require_once($basedir.'/include/db_tactivity.inc.php');
 require_once($basedir.'/include/lib_strava.php');
-require_once('../include/images.inc.php');
 
 
 use Strava\API\OAuth;
@@ -44,38 +43,11 @@ if (isset($_GET['hub_challenge'])) {
 
 
 
-        // get activity for $jsonData->object_id
+        // get activity for $jsonData->object_id from strava and create map image
         $stravaActivity = getNewActivity($jsonData->object_id, $jsonData->owner_id);
-     
-        $text = $stravaActivity->name;
-        $heroimageFilename = "";
-        if($stravaActivity->summary_polyline!="") {
-                error_log("strava activity has map data",0);
-                
-                $heroimageFilename = hash('ripemd128', "heroimagesalt".$user->getId().time()).".jpg"; 
-                
-                if(saveRouteToImage($stravaActivity->summary_polyline,$heroimageFilename)) {
-                    $activity->setHeroImage($heroimageFilename);
-                }
-                
-        } else {
-                error_log("strava activity does not have map data",0);
-                $text.="<br>soundsoviele km";
-        }
-
-
-
-        $activity = $orm->create(ActivityTable::class);
-        $activity->setFkiduser($user->getId());
-        $activity->setCreationdate(new DateTime());
-        $activity->setStrava_activity_id($stravaActivity->stravaId);
-        $activity->setText($text);
-        $activity->setHeroImage($heroimageFilename);
-        $activity->setReleased(1);
-        $activity->setDownloaded(1);
-        error_log(print_r($activity,true));
-     
-        $orm->save($activity);
+        
+        //insert sctivity in db
+        saveActivity($stravaActivity, $user);
 /*
  stdClass Object
 (
@@ -93,10 +65,12 @@ if (isset($_GET['hub_challenge'])) {
 
 
     } else if($jsonData->aspect_type=="update") {
+        $user =  $orm(User::class)->where('strava_athlete_id')->is($jsonData->owner_id)
+        ->get();
 
         $stravaActivity = getNewActivity($jsonData->object_id, $jsonData->owner_id);
        
-        
+        saveActivity($stravaActivity, $user);
 
 /*
 

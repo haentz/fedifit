@@ -27,6 +27,8 @@ Class Activity {
         $this->averageSpeed = round($stravaActivity["average_speed"],1); // <km>
         $this->calories = floor($stravaActivity['kilojoules']/4);
         $this->summary_polyline = $stravaActivity['map']['summary_polyline'];
+
+        
         return $this;
     }
 

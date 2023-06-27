@@ -161,7 +161,7 @@ class ActivityTable extends Entity  implements IMappableEntity
            'released' => 'int',
            'downloaded' => 'int',
            'strava_activity_id' => 'integer',
-           'heroImage' => 'string',
+           'heroImage' => '?string',
            'text' => 'string'
        ]);
 
