@@ -1,7 +1,15 @@
 <?php
+include $basedir.'/vendor/autoload.php';
+
+use \DantSu\OpenStreetMapStaticAPI\OpenStreetMap;
+use \DantSu\OpenStreetMapStaticAPI\LatLng;
+use \DantSu\OpenStreetMapStaticAPI\Line;
+use \DantSu\OpenStreetMapStaticAPI\Markers;
+use \DantSu\OpenStreetMapStaticAPI\TileLayer;
+
 
 // todo: exceptions!
-function saveRouteToImage($route, $filename, $mapstyle=1, $style=1):boolean {
+function saveRouteToImage($route, $filename, $mapstyle=1, $style=1):bool {
 
     $points = Polyline::decode($route);
     $points = Polyline::pair($points);
@@ -35,11 +43,11 @@ function saveRouteToImage($route, $filename, $mapstyle=1, $style=1):boolean {
     if ($maxDiff < 360 / pow(2, 20)) {
         $zoomLevel = 21;
     } else {
-        $zoomLevel = (int) (-1*( (log($maxDiff)/log(2)) - (log(360)/log(2))));
+        $zoomLevel = (int) (-1*( (log($maxDiff/2)/log(2)) - (log(360)/log(2))));
         if ($zoomLevel < 1)
             $zoomLevel = 1;
     }
-    $zoomLevel++;
+    //$zoomLevel+=1;
     // print_r($boundingBox);
     //League\Geotools\BoundingBox\BoundingBox Object ( [north:League\Geotools\BoundingBox\BoundingBox:private] => 48.08094 [east:League\Geotools\BoundingBox\BoundingBox:private] => 11.52298 [south:League\Geotools\BoundingBox\BoundingBox:private] => 48.08094 [west:League\Geotools\BoundingBox\BoundingBox:private] => 11.52298 [hasCoordinate:League\Geotools\BoundingBox\BoundingBox:private] => 1 [ellipsoid:League\Geotools\BoundingBox\BoundingBox:private] => League\Geotools\Coordinate\Ellipsoid Object ( [name:protected] => WGS 84 [a:protected] => 6378137 [invF:protected] => 298.257223563 ) [precision:League\Geotools\BoundingBox\BoundingBox:private] => 8 )
 
@@ -47,7 +55,7 @@ function saveRouteToImage($route, $filename, $mapstyle=1, $style=1):boolean {
 
 
 
-    $lineToDraw = new Line('FF0000DD', 2);
+    $lineToDraw = new Line('FF0000DD', 4);
 
     foreach($points as $point) {
         
@@ -64,6 +72,7 @@ function saveRouteToImage($route, $filename, $mapstyle=1, $style=1):boolean {
     
 
     $image = (new OpenStreetMap(new LatLng($middlePoint->getLatitude(), $middlePoint->getLongitude()), $zoomLevel, 800, 800))
+        
         ->addDraw($lineToDraw)
         ->getImage();
         
@@ -89,6 +98,9 @@ function saveRouteToImage($route, $filename, $mapstyle=1, $style=1):boolean {
     }
    
    
+
+
+    
     $image->saveJPG('../images/'.$filename,82);
     
     return true;

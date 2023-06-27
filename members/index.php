@@ -63,12 +63,12 @@ if ($user->getStravaAccessToken()==null) {
         print $e->getMessage();
     }
 } else  { 
-    
-    getNewActivity(9336857994, $iduser);
+    ?><pre><?php
+    print_r(getNewActivity(9332359898, $iduser));
     
     
     ?>
-
+</pre>
 Recent rides synced from Strava: <br>
 <ul class="ridelist">
 

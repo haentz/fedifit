@@ -9,7 +9,7 @@ use Opis\ORM\{
     IMappableEntity
 };
 
-class DBActivity extends Entity  implements IMappableEntity
+class ActivityTable extends Entity  implements IMappableEntity
 {
 
 
@@ -167,6 +167,9 @@ class DBActivity extends Entity  implements IMappableEntity
 
    
    }
+
+
+   
 }
 
 

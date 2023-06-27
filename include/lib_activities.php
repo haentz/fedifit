@@ -17,16 +17,17 @@ Class Activity {
     public int $idUser; //fediride iduser
     public String $text;
 
-    public function parseActivities(String $stravaActivity):Activity {
-        self.$stravaId = $stravaActivity['id'];
-        self.$stravaAthleteId = $stravaActivity['athlete']['id'];
-        self.$name = $stravaActivity['name'];
-        self.$distance = floor($stravaActivity['distance'])/1000;  // meters
-        self.$movingTime = floor($stravaActivity["moving_time"])/60;  // minutes
-        self.$elevationGain = $stravaActivity["total_elevation_gain"]; // meters
-        self.$averageSpeed = round($stravaActivity["average_speed"],1); // <km>
-        self.$calories = floor($stravaActivity['kilojoules']/4,184);
-        self.$summary_polyline = $stravaActivity['map']['summary_polyline'];
+    public function parseActivity($stravaActivity):Activity {
+        $this->stravaId = $stravaActivity['id'];
+        $this->stravaAthleteId = $stravaActivity['athlete']['id'];
+        $this->name = $stravaActivity['name'];
+        $this->distance = floor($stravaActivity['distance'])/1000;  // meters
+        $this->movingTime = floor($stravaActivity["moving_time"])/60;  // minutes
+        $this->elevationGain = $stravaActivity["total_elevation_gain"]; // meters
+        $this->averageSpeed = round($stravaActivity["average_speed"],1); // <km>
+        $this->calories = floor($stravaActivity['kilojoules']/4);
+        $this->summary_polyline = $stravaActivity['map']['summary_polyline'];
+        return $this;
     }
 
 }

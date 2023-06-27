@@ -105,7 +105,7 @@ League\OAuth2\Client\Token\AccessToken Object ( [accessToken:protected] => 1ee46
                 // todo check if strava_activity_id already in db!
 
                 foreach($activities as $activity) {
-                    $activity = $orm->create(DBActivity::class);
+                    $activity = $orm->create(ActivityTable::class);
                     $activity->setFkiduser($user->getId());
                     $activity->setCreationdate(new DateTime());
                     $activity->setStrava_activity_id($stravaActivity["id"]);
