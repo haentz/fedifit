@@ -64,20 +64,20 @@ if ($user->getStravaAccessToken()==null) {
     }
 } else  { 
     ?><pre><?php
-    $stravaActivity = getNewActivity(9332359898, $user->getStravaId());
-    saveActivity($stravaActivity, $user);
-    
+    // $stravaActivity = getNewActivity(9332359898, $user->getStravaId());
+    // saveActivity($stravaActivity, $user);
     ?>
 </pre>
+
 Recent rides synced from Strava: <br>
 <ul class="ridelist">
-
-
-
-
+    <li>Ride 1</li>
+    <li>Ride 2</li>
 </ul>
 
+<p>Your ActivityPub adress (subscribe to this URL in Mastodon): <input type="text" value="<?= $user->getName() ?>@bikelog.de" /></p>
 
+<a href="#?a=d">delete your account and all data</a>
 <?php
 } // ende else
 

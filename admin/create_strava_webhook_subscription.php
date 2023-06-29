@@ -138,9 +138,9 @@ if (isset($_GET['hub_challenge'])) {
 // -F verify_token=$STRAVA_VERIFY_TOKEN
 
 // view subscritpion
-curl -G https://www.strava.com/api/v3/push_subscriptions \
-    -d client_id=5 \
-    -d client_secret=7b2946535949ae70f015d696d8ac602830ece412
+// curl -G https://www.strava.com/api/v3/push_subscriptions \
+//     -d client_id=5 \
+//     -d client_secret=7b2946535949ae70f015d696d8ac602830ece412
 
 
 // $curl = curl_init();
@@ -173,6 +173,6 @@ curl -G https://www.strava.com/api/v3/push_subscriptions \
 
 
 // test create webhook
-//curl -X POST http://www.bikelog.de/admin/strava_webhook.php -H 'Content-Type: application/json' -d '{ "aspect_type": "create", "event_time": 1687787304,"object_id": 9332359898,"object_type": "activity","owner_id": 2321457,"subscription_id": 243913}'
+//curl -X POST https://www.bikelog.de/admin/strava_webhook.php -H 'Content-Type: application/json' -d '{ "aspect_type": "create", "event_time": 1687787304,"object_id": 9332359898,"object_type": "activity","owner_id": 2321457,"subscription_id": 243913}'
 
 ?> 

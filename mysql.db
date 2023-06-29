@@ -31,3 +31,14 @@ CREATE TABLE `tactivity` (
   UNIQUE KEY `unq_heroimage` (`heroImage`),
   KEY `iduser` (`fkiduser`)
 ) ENGINE=InnoDB AUTO_INCREMENT=173 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+CREATE TABLE `tkeys` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `fkiduser` int unsigned NOT NULL,
+  `privatekey` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `publickey` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fkiduser` (`fkiduser`),
+  CONSTRAINT `fkiduser` FOREIGN KEY (`fkiduser`) REFERENCES `tuser` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
