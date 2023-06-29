@@ -18,11 +18,12 @@ $parts = explode('@', $resource);
 
 $name = $parts[0];
 $domain = "@" . $parts[1];
-$server = $_SERVER;
+
 if($domain!="@bikelog.de") {
     // todo: handel graceful!!!!
     die;
 }
+
 
 
 $user = $orm->create(User::class);
@@ -37,7 +38,7 @@ $user =  $orm(User::class)->where('name')->is($name)
 		{
 			"rel": "self",
 			"type": "application/activity+json",
-			"href": "<?= $server  ?>/user/<?= $user->getName() ?>"
+			"href": "<?= $serverName  ?>/user/<?= $user->getName() ?>"
 		}
 	]
 }

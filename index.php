@@ -3,6 +3,7 @@
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 require_once('include/db.inc.php');
+require_once($basedir.'/include/db_tkeys.inc.php');
 
 
 $message= "";
@@ -40,20 +41,55 @@ if($name==""   || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
   }
 
   if($error==0){
-    $user = $orm->create(User::class);
-   // todo: better rresgistration process. set in db: user_email_confirmed=0, do not send link to login, but to confirm&login in first registratioon email,. If user doesnt click within 24h, remove from db
-   
-    // Set user's name
-    $user->setEmail($email);  
-    $user->setName($name);
-    $user->setCreationdate(new DateTime());
-    $orm->save($user);
+      $user = $orm->create(User::class);
+    // todo: better rresgistration process. set in db: user_email_confirmed=0, do not send link to login, but to confirm&login in first registratioon email,. If user doesnt click within 24h, remove from db
     
-    $logintoken = hash('ripemd128', "saltlogin".$iduser.time()); 
-    $user->setLogintoken($logintoken);
-    $user->setLogintokencreationdate(new DateTime());
-    $orm->save($user);
+      // Set user's name
+      $user->setEmail($email);  
+      $user->setName($name);
+      $user->setCreationdate(new DateTime());
+      $orm->save($user);
+      
+      $logintoken = hash('ripemd128', "saltlogin".$iduser.time()); 
+      $user->setLogintoken($logintoken);
+      $user->setLogintokencreationdate(new DateTime());
+      $orm->save($user);
+      
+      
+      $keys = $orm->create(Keys::class);
+
+    $res = openssl_pkey_new(array( 
+        'private_key_bits' => 2048,
+        'private_key_type' => OPENSSL_KEYTYPE_RSA,
+    ));
+    
+    openssl_pkey_export($res, $privaKey);
+    $privKey = openssl_pkey_get_private($privaKey); 
+    
+    $pubKey = openssl_pkey_get_details($res);
+    $pubKey = $pubKey["key"];
+    
+    // //$privKey = openssl_pkey_get_private($rsaKey); 
+    openssl_pkey_export($privKey, $pem);
+   
+    
+    // $pubKey = openssl_pkey_get_details($rsaKey);
+    openssl_pkey_export($pubKey, $pempublic);
+  
+    $keys->setFkiduser($user->getID());
+    $keys->setPrivatekey($pem);
+    $keys->setPublickey($pempublic);
+      
+      
+    
+    
+    
+    
+    
     $message = "<b>An Email has been sent to your registered Email Adress with a link to log in.</b>";
+
+
+
 
 
 //todo: put duplicate code, put in include

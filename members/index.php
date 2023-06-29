@@ -71,8 +71,8 @@ if ($user->getStravaAccessToken()==null) {
 
 Recent rides synced from Strava: <br>
 <ul class="ridelist">
-    <li>Ride 1</li>
-    <li>Ride 2</li>
+    <li>Ride 1  add images</li>
+    <li>Ride 2  add images</li>
 </ul>
 
 <p>Your ActivityPub adress (subscribe to this URL in Mastodon): <input type="text" value="<?= $user->getName() ?>@bikelog.de" /></p>

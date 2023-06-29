@@ -12,20 +12,25 @@ nginx:
 require_once('../include/db.inc.php');
 require_once($basedir.'/vendor/autoload.php');
 require_once($basedir.'/include/db_tuser.inc.php');
+require_once($basedir.'/include/db_tkeys.inc.php');
 
-$name = $_GET["user"];
+$name = $_GET["name"];
 
-$name = $parts[0];
-
-$server = $_SERVER;
 
 $user = $orm->create(User::class);
 // get iduser by token. only valid for 1 hour!
 $user =  $orm(User::class)->where('name')->is($name)
 ->get();
 
+if($user==null) {
+    // todo: fail gracefully
+    die;
+}
+
 $userKeys = $orm(Keys::class)->where('fkiduser')->is($user->getId())
 ->get();
+
+
 
 ?>{
 	"@context": [
@@ -33,14 +38,14 @@ $userKeys = $orm(Keys::class)->where('fkiduser')->is($user->getId())
 		"https://w3id.org/security/v1"
 	],
 
-	"id": "https://<?= $server ?>/user/<?= $name ?>",
+	"id": "https://<?= $serverName ?>/user/<?= $name ?>",
 	"type": "Person",
 	"preferredUsername": "<?= $name ?>",
-	"inbox": "https://<?= $server ?>/inbox/<?= $name ?>",
-
+	"inbox": "https://<?= $serverName ?>/inbox/<?= $name ?>",
+    "outbox": "https://<?= $serverName ?>/outbox/<?= $name ?>",
 	"publicKey": {
-		"id": "https://<?= $server ?>/user/<?= $name ?>#main-key",
-		"owner": "https://<?= $server ?>/user/<?= $name ?>",
+		"id": "https://<?= $serverName ?>/user/<?= $name ?>#main-key",
+		"owner": "https://<?= $serverName ?>/user/<?= $name ?>",
 		"publicKeyPem": "<?= $userKeys->getPublickey() ?>"
 	}
 }
