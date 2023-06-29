@@ -26,11 +26,14 @@ CREATE TABLE `tactivity` (
   `text` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `released` tinyint(1) NOT NULL,
   `downloaded` tinyint(1) NOT NULL,
+  `like` int NOT NULL,
+  `announce` int NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `unq_strava_activity_id` (`strava_activity_id`),
   UNIQUE KEY `unq_heroimage` (`heroImage`),
   KEY `iduser` (`fkiduser`)
-) ENGINE=InnoDB AUTO_INCREMENT=173 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=176 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 
 
 CREATE TABLE `tkeys` (

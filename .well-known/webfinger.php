@@ -13,6 +13,9 @@ require_once('../include/db.inc.php');
 require_once($basedir.'/vendor/autoload.php');
 require_once($basedir.'/include/db_tuser.inc.php');
 
+error_log('webfinger: '.print_r($_GET,true));
+
+
 $resource = $_GET["resource"];
 $parts = explode('@', $resource);
 

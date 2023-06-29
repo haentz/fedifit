@@ -103,7 +103,8 @@ function saveActivity($stravaActivity, $user) {
     }
     $activity->setReleased(1);
     $activity->setDownloaded(1);
-   
+    $activity->setLike(0);
+    $activity->setAnnounce(0);
     $orm->save($activity);
 
 }

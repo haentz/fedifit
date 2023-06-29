@@ -16,6 +16,8 @@ require_once($basedir.'/include/db_tkeys.inc.php');
 
 $name = $_GET["name"];
 
+error_log('user: '.print_r($_GET,true));
+
 
 $user = $orm->create(User::class);
 // get iduser by token. only valid for 1 hour!
@@ -38,14 +40,14 @@ $userKeys = $orm(Keys::class)->where('fkiduser')->is($user->getId())
 		"https://w3id.org/security/v1"
 	],
 
-	"id": "https://<?= $serverName ?>/user/<?= $name ?>",
+	"id": "<?= $serverName ?>/user/<?= $name ?>",
 	"type": "Person",
 	"preferredUsername": "<?= $name ?>",
-	"inbox": "https://<?= $serverName ?>/inbox/<?= $name ?>",
-    "outbox": "https://<?= $serverName ?>/outbox/<?= $name ?>",
+	"inbox": "<?= $serverName ?>/inbox/<?= $name ?>",
+    "outbox": "<?= $serverName ?>/outbox/<?= $name ?>",
 	"publicKey": {
-		"id": "https://<?= $serverName ?>/user/<?= $name ?>#main-key",
-		"owner": "https://<?= $serverName ?>/user/<?= $name ?>",
+		"id": "<?= $serverName ?>/user/<?= $name ?>#main-key",
+		"owner": "<?= $serverName ?>/user/<?= $name ?>",
 		"publicKeyPem": "<?= $userKeys->getPublickey() ?>"
 	}
 }

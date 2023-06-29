@@ -134,7 +134,7 @@ class ActivityTable extends Entity  implements IMappableEntity
     }
 
     /**
-    *released
+    *downloaded
      */
     public function getDownloaded(): int
     {
@@ -145,6 +145,39 @@ class ActivityTable extends Entity  implements IMappableEntity
     public function setDownloaded(int $downloaded): self
     {
         $this->orm()->setColumn('downloaded', $downloaded);
+        return $this;
+    }
+
+
+
+  /**
+    *like
+     */
+    public function getLike(): int
+    {
+        return $this->orm()->getColumn('like');
+    }
+
+  
+    public function setLike(int $like): self
+    {
+        $this->orm()->setColumn('like', $like);
+        return $this;
+    }
+
+
+      /**
+    *announce
+     */
+    public function getAnnounce(): int
+    {
+        return $this->orm()->getColumn('announce');
+    }
+
+  
+    public function setAnnounce(int $announce): self
+    {
+        $this->orm()->setColumn('announce', $announce);
         return $this;
     }
 
@@ -162,7 +195,9 @@ class ActivityTable extends Entity  implements IMappableEntity
            'downloaded' => 'int',
            'strava_activity_id' => 'integer',
            'heroImage' => '?string',
-           'text' => 'string'
+           'text' => 'string',
+           'like' => 'integer',
+           'announce' => 'integer'
        ]);
 
    
