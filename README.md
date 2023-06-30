@@ -30,3 +30,18 @@ league/oauth2-client/src/Token/AccessToken.php
 Line 95
 if (empty($options['access_token'])) {
     ->     if (empty($options['access_token']) && empty($options['refresh_token'])) {
+
+
+
+
+
+
+
+
+
+
+       ## Activitypubb:
+https://knuspermagier.de/posts/2022/der-kirby-blog-als-fediverse-teilnehmer-in-vierhundert-einfachen-schritten
+        > "Servers performing delivery to the inbox or sharedInbox properties of actors on other servers MUST provide the object property in the activity: Create, Update, Delete, Follow, Add, Remove, Like, Block, > > Undo. Additionally, servers performing server to server delivery of the following activities **MUST also provide the target property: Add, Remove.**"
+
+
