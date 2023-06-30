@@ -161,6 +161,19 @@ class User extends Entity  implements IMappableEntity
   }
 
 
+   /**
+  *  image
+  */
+  public function getImage(): ?string
+  {
+      return $this->orm()->getColumn('image');
+  }
+      
+  public function setImage(string $image): self
+  {
+      $this->orm()->setColumn('image', $image);
+      return $this;
+  }
 
 
 
@@ -181,7 +194,8 @@ class User extends Entity  implements IMappableEntity
           `strava_athlete_id` => 'integer',
           `strava_refresh_token` => '?string',
           `strava_access_token` => '?string',
-          `strava_access_token_expirationdate`  => '?date'
+          `strava_access_token_expirationdate`  => '?date',
+          'image' => '?string',
       ]);
 
     
