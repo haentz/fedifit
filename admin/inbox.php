@@ -3,6 +3,10 @@ require_once('../include/db.inc.php');
 require_once($basedir.'/include/lib_helper.inc.php');
 
 error_log('inbox request dump: '.(new DumpHTTPRequestToFile)->execute());
+
+//https://rhiaro.co.uk/2016/05/minimal
+
+
 // part of the actiovity pub  server API
 //follow -> save to db
 /**

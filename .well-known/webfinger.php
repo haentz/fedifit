@@ -26,13 +26,13 @@ $parts = explode(':', $name);
 $name = $parts[1];
 
 
-if($domain!="@567c-95-89-45-59.ngrok-free.app") {
+if($domain!=$serverHost) {
     // todo: handel graceful!!!!
     die;
 }
 
 
-error_log($name);
+
 $user = $orm->create(User::class);
 // get iduser by token. only valid for 1 hour!
 $user =  $orm(User::class)->where('name')->is($name)
@@ -46,7 +46,7 @@ if($user==null) {
 
 
 ?>{
-	"subject": "acct:<?= $user->getName() ?>@567c-95-89-45-59.ngrok-free.app",
+	"subject": "acct:<?= $user->getName() ?>@<?= $serverHost ?>",
 
 	"links": [
 		{
