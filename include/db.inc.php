@@ -10,17 +10,11 @@ use Opis\ORM\{
 };
 
 //  // Define a database connection
-$connection = new Connection("mysql:host=10.0.1.94;dbname=fedifit", "fedifit", "fit");
+$connection = new Connection("mysql:host=".$dbHost.";dbname=fedifit", "fedifit", $dbPassword);
   
   
 //  // Create an entity manager
 $orm = new EntityManager($connection);
-
-
-
-
-
-
 
 
 ?>
