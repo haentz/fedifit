@@ -7,7 +7,7 @@ error_reporting(E_ERROR  | E_PARSE);
 
 // todo: move to own file
 
-$serverHost = "99cf-95-89-45-59.ngrok-free.app";
+$serverHost = "f9f5-95-89-45-59.ngrok-free.app";
 $serverName = "https://".$serverHost;
 $stravaRedirectURI = $serverName.'/members/auth_strava.php';
 

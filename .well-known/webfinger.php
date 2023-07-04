@@ -20,7 +20,7 @@ $resource = $_GET["resource"];
 $parts = explode('@', $resource);
 
 $name = $parts[0];
-$domain = "@" . $parts[1];
+$domain = $parts[1];
 
 $parts = explode(':', $name);
 $name = $parts[1];
