@@ -2,14 +2,15 @@
 require_once('../include/db.inc.php');
 require_once($basedir.'/include/lib_helper.inc.php');
 
+use phpseclib3\Crypt\RSA;
+use phpseclib3\Crypt\PublicKeyLoader;
+
+
 $request = json_decode(file_get_contents('php://input'));
 // filter spam calls
 if($request->actor!='https://mastodon.social/users/haentz') die;
 
-//   foreach ($_SERVER as $name => $value) {
-// error_log($name .":".$value);
-
-//   }
+  // foreach ($_SERVER as $name => $value) { error_log($name .":".$value);   }
 //error_log('inbox request dump: '.(new DumpHTTPRequestToFile)->execute());
 
 //error_log(print_r($request,true));
@@ -31,25 +32,71 @@ foreach($sub as $kv) {
 $opts = array('http' =>
   array(
    'method'  => 'GET',
-    'follow_location' => true,
-    'max_redirects' => 20,
-    'timeout' => 10
+   'header'=>"Accept: application/activity+json"
+  //  ,
+  //   'follow_location' => true,
+  //   'max_redirects' => 20,
+  //   'timeout' => 10
 
   )
 
 );
 
-                        
+// (request-target) post /inbox/haentz
+// host: f9f5-95-89-45-59.ngrok-free.app
+// date: Wed, 05 Jul 2023 12:13:33 GMT
+// digest: SHA-256=jmcNJqxWhO1LNZxDOYrTwhbuwLuvtUCPUHzVrkJ8kBk=
+// content-type: application/activity+json
 
-$context  = stream_context_create($opts);
+    $actorFile = explode('#',$result['keyId'])[0];
+   //$result['keyId']
+  $context  = stream_context_create($opts);
+  $actorJson = file_get_contents($actorFile, false, $context);
+  $actor = json_decode($actorJson,true);
+  //  error_log(print_r($actor, true));
+  
+$actorKey = $actor['publicKey']['publicKeyPem'];
+$request_target = strtolower($_SERVER['REQUEST_METHOD']).' '.$_SERVER['REQUEST_URI'];
+$signatureHeaders = explode(" ",$result['headers']);
+$signatureBase = '';
+
+foreach($signatureHeaders as $signatureHeader) {
 
 
-  $key = file_get_contents($result['keyId'], false, $context);
+  if($signatureHeader=='(request-target)') {
+    $signatureBase.='(request-target) '.$request_target.'\n';
+  } else {
+    $signatureBase.=$signatureHeader.': '.$_SERVER['HTTP_'.strtr(strtoupper($signatureHeader),'-','_')].'\n';
+  }
+ 
+}
 
-  error_log($key);
+//  error_log('sig: '.$result['signature']); 
+//  error_log('digest '.openssl_digest($signatureBase,'sha256'));
+$decrypted = '';
+   // Verify that string using the public key and the original 
+        // signature.
+        $rsa = RSA::createKey()
+                  ->loadPublicKey($actorKey)
+                  ->withHash('sha256'); 
+
+// error_log(':'.$actorKey.':'); 
+
+error_log(':'.$signatureBase.':'); 
+
+// error_log(':'.$result['signature'].':'); 
 
 
-//https://rhiaro.co.uk/2016/05/minimal
+//error_log(':'.base64_decode($result['signature'], true).':'); 
+
+
+error_log($rsa->verify( $signatureBase, base64_decode($result['signature'], true))?"y":"n");
+
+ //error_log('original :'.openssl_decrypt($result['signature'],$actorKey)));
+
+
+
+ //https://rhiaro.co.uk/2016/05/minimal
 // https://knuspermagier.de/posts/2022/der-kirby-blog-als-fediverse-teilnehmer-in-vierhundert-einfachen-schritten
 /**
  * Follow request
@@ -66,7 +113,7 @@ if($request->type=="Follow") {
  * HTTP headers:
 X-Forwarded-Proto: https
 X-Forwarded-For: 162.55.173.236
-Signature: keyId="https://mastodon.social/users/unoceanodefuego#main-key",algorithm="rsa-sha256",headers="(request-target) host date digest content-type",signature="acgDDCcE3nrgO2Qr2gco6NniJ4va3FoRwuYLUtrjiRwl67ErE5KLqy3DZ1eW2SVV/LCZJwE/09PvH0YBYf6E+aTPCZYFf5vPHL984bC2bW6SniV16o6hwP7ntv0hdUJJZK+thxpi3Ux2i2rgBAScRUfIpW2qLXV22e/mZ2TsCAN0BfyCm3xMyUrAvCNAtiiIGxt1S/iCKEjOHfrDlU7azLBS2KIYy7yEy3g95oiDjobXmQnP+RQ1GW4Qt7u5zpF7uuU0uWsPzcdAfSLbWerl1or3n4mV4pzFXiZqUd6rhAeR0qjQhQ2HqDp3zOXX4+HpQ8JzQZndcQQ86YUlClEVKw=="
+Signature: keyId="https://mastodon.social/users/haentz#main-key",algorithm="rsa-sha256",headers="(request-target) host date digest content-type",signature="acgDDCcE3nrgO2Qr2gco6NniJ4va3FoRwuYLUtrjiRwl67ErE5KLqy3DZ1eW2SVV/LCZJwE/09PvH0YBYf6E+aTPCZYFf5vPHL984bC2bW6SniV16o6hwP7ntv0hdUJJZK+thxpi3Ux2i2rgBAScRUfIpW2qLXV22e/mZ2TsCAN0BfyCm3xMyUrAvCNAtiiIGxt1S/iCKEjOHfrDlU7azLBS2KIYy7yEy3g95oiDjobXmQnP+RQ1GW4Qt7u5zpF7uuU0uWsPzcdAfSLbWerl1or3n4mV4pzFXiZqUd6rhAeR0qjQhQ2HqDp3zOXX4+HpQ8JzQZndcQQ86YUlClEVKw=="
 Digest: SHA-256=IaCMWTgWFQScjXZLPGyS8H3kpdglj2Ddwu1npssKde0=
 Date: Mon, 03 Jul 2023 13:41:50 GMT
 Content-Type: application/activity+json

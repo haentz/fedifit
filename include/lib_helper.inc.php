@@ -1,8 +1,6 @@
 <?php
 
 class DumpHTTPRequestToFile {
-	
-	
 	public function execute() {
 		$data = sprintf(
 			"%s %s %s\n\nHTTP headers:\n",

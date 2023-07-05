@@ -16,8 +16,9 @@ require_once($basedir.'/include/db_tkeys.inc.php');
 
 $name = $_GET["name"];
 
-error_log('user: '.print_r($_GET,true));
-
+//error_log('user: '.print_r($_GET,true));
+require_once($basedir.'/include/lib_helper.inc.php');
+error_log('inbox request dump: '.(new DumpHTTPRequestToFile)->execute());
 
 $user = $orm->create(User::class);
 // get iduser by token. only valid for 1 hour!
