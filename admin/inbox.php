@@ -2,8 +2,55 @@
 require_once('../include/db.inc.php');
 require_once($basedir.'/include/lib_helper.inc.php');
 
+/*
+
+The request data for this example"
+
+HTTP request:
+POST /inbox/haentz HTTP/1.1
+
+HTTP headers:
+X-Forwarded-Proto: https
+X-Forwarded-For: 167.235.253.16
+Signature: keyId="https://mastodon.social/users/haentz#main-key",algorithm="rsa-sha256",headers="(request-target) host date digest content-type",signature="pcnx7L4JnqOecwHRIHr4AcQzrDQGJITiKi4obFCMN47ET17Nukyej4tc9ctwuf42osDJBHZFFeHDHq/ersnH/wzmmSYgKb2n/pjZlIIiKbFpP8uZWR4occ3ef5yw0h/DK9q4iRtxRefTyAj6uXAc9M/HTil5r2Mf7vKAtYxN0VlEowokkLmZv2QWUQfnLu0KS6GX1NsD+JPd2mhuHDl5f3blIV3cNFOL4dvAeagCoA6gScfoO9GvgWWKHMyjbzBO8uJoGiA/dQ78rnd6ooPX/bOlhhIwBXZQJcWUt03DQd8hgX1631xnmF7WqVH87Omtg3/1J9UEmP+Q4jvRReaZbg=="
+Digest: SHA-256=7ra3kP4ddU4a8Q0Rg/xcGoebr05AkYTzSHfpVW8Pj6o=
+Date: Wed, 05 Jul 2023 12:59:35 GMT
+Content-Type: application/activity+json
+Accept-Encoding: gzip
+Content-Length: 246
+User-Agent: http.rb/5.1.1 (Mastodon/4.1.2+nightly-20230705; +https://mastodon.social/)
+Host: f9f5-95-89-45-59.ngrok-free.app
+*/
+
 use phpseclib3\Crypt\RSA;
-use phpseclib3\Crypt\PublicKeyLoader;
+
+$actorKey="-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4SEtohtPowClx878glaG
+OmUkM0HD+vM0M9fH1opKG8mnlplfO3vuQk5iN8Jp5Sg4DD6lzHnbQ1Ze57uVm90I
+R4DgEdRidaZs1NPrYPv63j1r3HMoBruPw0EX+/paf8izOcxxx6B7G2ebBl/rZQbI
+UtAsBLYFM+uHWbMR8+H5hHlhuRF/SHHRmWvNAeGm9B1H6uZMt3chyPluc/t3Kxz9
+4/qE52b2YM1YBhzL+50eTpHWq6RaMEQ8zVCXKi1+e7Gxdf++EFJFgx3PR1x9U3AM
+AoT4UyZzzMX5jVkpi1G5P+/2MnBv3DsF95K9b5A+Y15bqCQCfkgjcfDHENuADHYa
+kQIDAQAB
+-----END PUBLIC KEY-----
+";
+
+$signatureBase = "(request-target): post /inbox/haentz
+host: f9f5-95-89-45-59.ngrok-free.app
+date: Wed, 05 Jul 2023 12:59:35 GMT
+digest: SHA-256=7ra3kP4ddU4a8Q0Rg/xcGoebr05AkYTzSHfpVW8Pj6o=
+content-type: application/activity+json
+";
+
+$sig="pcnx7L4JnqOecwHRIHr4AcQzrDQGJITiKi4obFCMN47ET17Nukyej4tc9ctwuf42osDJBHZFFeHDHq/ersnH/wzmmSYgKb2n/pjZlIIiKbFpP8uZWR4occ3ef5yw0h/DK9q4iRtxRefTyAj6uXAc9M/HTil5r2Mf7vKAtYxN0VlEowokkLmZv2QWUQfnLu0KS6GX1NsD+JPd2mhuHDl5f3blIV3cNFOL4dvAeagCoA6gScfoO9GvgWWKHMyjbzBO8uJoGiA/dQ78rnd6ooPX/bOlhhIwBXZQJcWUt03DQd8hgX1631xnmF7WqVH87Omtg3/1J9UEmP+Q4jvRReaZbg==";
+
+$rsa = RSA::createKey()
+->loadPublicKey($actorKey)
+->withHash('sha256'); 
+
+error_log($rsa->verify( $signatureBase,  base64_decode($sig, true))?"Y":"N");
+
+die;
 
 
 $request = json_decode(file_get_contents('php://input'));
@@ -14,6 +61,7 @@ if($request->actor!='https://mastodon.social/users/haentz') die;
 //error_log('inbox request dump: '.(new DumpHTTPRequestToFile)->execute());
 
 //error_log(print_r($request,true));
+error_log('inbox request dump: '.(new DumpHTTPRequestToFile)->execute());
 
 
 
@@ -48,6 +96,8 @@ $opts = array('http' =>
 // digest: SHA-256=jmcNJqxWhO1LNZxDOYrTwhbuwLuvtUCPUHzVrkJ8kBk=
 // content-type: application/activity+json
 
+
+
     $actorFile = explode('#',$result['keyId'])[0];
    //$result['keyId']
   $context  = stream_context_create($opts);
@@ -62,11 +112,10 @@ $signatureBase = '';
 
 foreach($signatureHeaders as $signatureHeader) {
 
-
   if($signatureHeader=='(request-target)') {
-    $signatureBase.='(request-target) '.$request_target.'\n';
+    $signatureBase.='(request-target) '.$request_target."\n";
   } else {
-    $signatureBase.=$signatureHeader.': '.$_SERVER['HTTP_'.strtr(strtoupper($signatureHeader),'-','_')].'\n';
+    $signatureBase.=$signatureHeader.': '.$_SERVER['HTTP_'.strtr(strtoupper($signatureHeader),'-','_')]."\n";
   }
  
 }
@@ -90,7 +139,7 @@ error_log(':'.$signatureBase.':');
 //error_log(':'.base64_decode($result['signature'], true).':'); 
 
 
-error_log($rsa->verify( $signatureBase, base64_decode($result['signature'], true))?"y":"n");
+error_log($rsa->verify( $signatureBase,  base64_decode($result['signature'], true))?"Y":"N");
 
  //error_log('original :'.openssl_decrypt($result['signature'],$actorKey)));
 
