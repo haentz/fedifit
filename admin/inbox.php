@@ -2,6 +2,10 @@
 require_once('../include/db.inc.php');
 require_once($basedir.'/include/lib_helper.inc.php');
 
+
+
+use phpseclib3\Crypt\RSA;
+
 /*
 
 The request data for this example"
@@ -22,35 +26,86 @@ User-Agent: http.rb/5.1.1 (Mastodon/4.1.2+nightly-20230705; +https://mastodon.so
 Host: f9f5-95-89-45-59.ngrok-free.app
 */
 
-use phpseclib3\Crypt\RSA;
 
-$actorKey="-----BEGIN PUBLIC KEY-----
-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4SEtohtPowClx878glaG
-OmUkM0HD+vM0M9fH1opKG8mnlplfO3vuQk5iN8Jp5Sg4DD6lzHnbQ1Ze57uVm90I
-R4DgEdRidaZs1NPrYPv63j1r3HMoBruPw0EX+/paf8izOcxxx6B7G2ebBl/rZQbI
-UtAsBLYFM+uHWbMR8+H5hHlhuRF/SHHRmWvNAeGm9B1H6uZMt3chyPluc/t3Kxz9
-4/qE52b2YM1YBhzL+50eTpHWq6RaMEQ8zVCXKi1+e7Gxdf++EFJFgx3PR1x9U3AM
-AoT4UyZzzMX5jVkpi1G5P+/2MnBv3DsF95K9b5A+Y15bqCQCfkgjcfDHENuADHYa
-kQIDAQAB
------END PUBLIC KEY-----
-";
+// $actorKey="-----BEGIN PUBLIC KEY-----
+// MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4SEtohtPowClx878glaG
+// OmUkM0HD+vM0M9fH1opKG8mnlplfO3vuQk5iN8Jp5Sg4DD6lzHnbQ1Ze57uVm90I
+// R4DgEdRidaZs1NPrYPv63j1r3HMoBruPw0EX+/paf8izOcxxx6B7G2ebBl/rZQbI
+// UtAsBLYFM+uHWbMR8+H5hHlhuRF/SHHRmWvNAeGm9B1H6uZMt3chyPluc/t3Kxz9
+// 4/qE52b2YM1YBhzL+50eTpHWq6RaMEQ8zVCXKi1+e7Gxdf++EFJFgx3PR1x9U3AM
+// AoT4UyZzzMX5jVkpi1G5P+/2MnBv3DsF95K9b5A+Y15bqCQCfkgjcfDHENuADHYa
+// kQIDAQAB
+// -----END PUBLIC KEY-----
+// ";
 
-$signatureBase = "(request-target): post /inbox/haentz
-host: f9f5-95-89-45-59.ngrok-free.app
-date: Wed, 05 Jul 2023 12:59:35 GMT
-digest: SHA-256=7ra3kP4ddU4a8Q0Rg/xcGoebr05AkYTzSHfpVW8Pj6o=
-content-type: application/activity+json
-";
+// $signatureBase = "(request-target): post /inbox/haentz
+// host: f9f5-95-89-45-59.ngrok-free.app
+// date: Wed, 05 Jul 2023 12:59:35 GMT
+// digest: SHA-256=7ra3kP4ddU4a8Q0Rg/xcGoebr05AkYTzSHfpVW8Pj6o=
+// content-type: application/activity+json
+// ";
 
-$sig="pcnx7L4JnqOecwHRIHr4AcQzrDQGJITiKi4obFCMN47ET17Nukyej4tc9ctwuf42osDJBHZFFeHDHq/ersnH/wzmmSYgKb2n/pjZlIIiKbFpP8uZWR4occ3ef5yw0h/DK9q4iRtxRefTyAj6uXAc9M/HTil5r2Mf7vKAtYxN0VlEowokkLmZv2QWUQfnLu0KS6GX1NsD+JPd2mhuHDl5f3blIV3cNFOL4dvAeagCoA6gScfoO9GvgWWKHMyjbzBO8uJoGiA/dQ78rnd6ooPX/bOlhhIwBXZQJcWUt03DQd8hgX1631xnmF7WqVH87Omtg3/1J9UEmP+Q4jvRReaZbg==";
+// $sig="pcnx7L4JnqOecwHRIHr4AcQzrDQGJITiKi4obFCMN47ET17Nukyej4tc9ctwuf42osDJBHZFFeHDHq/ersnH/wzmmSYgKb2n/pjZlIIiKbFpP8uZWR4occ3ef5yw0h/DK9q4iRtxRefTyAj6uXAc9M/HTil5r2Mf7vKAtYxN0VlEowokkLmZv2QWUQfnLu0KS6GX1NsD+JPd2mhuHDl5f3blIV3cNFOL4dvAeagCoA6gScfoO9GvgWWKHMyjbzBO8uJoGiA/dQ78rnd6ooPX/bOlhhIwBXZQJcWUt03DQd8hgX1631xnmF7WqVH87Omtg3/1J9UEmP+Q4jvRReaZbg==";
 
-$rsa = RSA::createKey()
-->loadPublicKey($actorKey)
-->withHash('sha256'); 
+// $rsa = RSA::createKey()
+// ->loadPublicKey($actorKey)
+// ->withHash('sha256'); 
 
-error_log($rsa->verify( $signatureBase,  base64_decode($sig, true))?"Y":"N");
+// error_log($rsa->verify( $signatureBase,  base64_decode($sig, true))?"Y":"N");
 
-die;
+// die;
+
+
+//test case 2:
+
+
+  /*
+HTTP request:
+POST /inbox/haentz HTTP/1.1
+
+HTTP headers:
+X-Forwarded-Proto: https
+X-Forwarded-For: 5.75.224.221
+Signature: keyId="https://mastodon.social/users/haentz#main-key",algorithm="rsa-sha256",headers="(request-target) host date digest content-type",signature="PA3zNHTuFWpgZzzwrt9tshDCEOAjaQWZmbyxvjfDigYT+L5OYlwUT8yFJp5rJgdWprZ/Zu4CoBmeMUPYnsOX6mdCqJwdsmERPcPhH01UJiqRg8e1V2uGpGc5yYc7ceBbWBbj1ppsvlhh/wNr5K9p9ps8DrSHOi6Agw1XQSMqjLR+dPrt3Ve5zsjxKeVFae7Rer4FRjbRlb/AAeJhzom9I7hbaEk9TD5SNSKCJeUiymWQZOLj0J0GH+2hm2eWx55bJUPoJnMcn+OdN3qFwChxtFrtIHW+V/ccNNJ63ChyXYihYUqkCrguCrTbVDRyXIk7K3IGPXXzZNRxIk1xvYj5vA=="
+Digest: SHA-256=9173oDrq/CcALgahzoJV34+l2J5/b5EJH7Ioj8T/7aA=
+Date: Thu, 06 Jul 2023 08:48:58 GMT
+Content-Type: application/activity+json
+Accept-Encoding: gzip
+Content-Length: 246
+User-Agent: http.rb/5.1.1 (Mastodon/4.1.2+nightly-20230705; +https://mastodon.social/)
+Host: 3daa-95-89-45-59.ngrok-free.app
+
+Req
+
+  */
+
+// $actorKey="-----BEGIN PUBLIC KEY-----
+// MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4SEtohtPowClx878glaG
+// OmUkM0HD+vM0M9fH1opKG8mnlplfO3vuQk5iN8Jp5Sg4DD6lzHnbQ1Ze57uVm90I
+// R4DgEdRidaZs1NPrYPv63j1r3HMoBruPw0EX+/paf8izOcxxx6B7G2ebBl/rZQbI
+// UtAsBLYFM+uHWbMR8+H5hHlhuRF/SHHRmWvNAeGm9B1H6uZMt3chyPluc/t3Kxz9
+// 4/qE52b2YM1YBhzL+50eTpHWq6RaMEQ8zVCXKi1+e7Gxdf++EFJFgx3PR1x9U3AM
+// AoT4UyZzzMX5jVkpi1G5P+/2MnBv3DsF95K9b5A+Y15bqCQCfkgjcfDHENuADHYa
+// kQIDAQAB
+// -----END PUBLIC KEY-----
+// ";
+
+// $signatureBase = "(request-target): post /inbox/haentz
+// host: 3daa-95-89-45-59.ngrok-free.app
+// date: Thu, 06 Jul 2023 08:48:58 GMT
+// digest: SHA-256=9173oDrq/CcALgahzoJV34+l2J5/b5EJH7Ioj8T/7aA=
+// content-type: application/activity+json
+// ";
+
+// $sig="PA3zNHTuFWpgZzzwrt9tshDCEOAjaQWZmbyxvjfDigYT+L5OYlwUT8yFJp5rJgdWprZ/Zu4CoBmeMUPYnsOX6mdCqJwdsmERPcPhH01UJiqRg8e1V2uGpGc5yYc7ceBbWBbj1ppsvlhh/wNr5K9p9ps8DrSHOi6Agw1XQSMqjLR+dPrt3Ve5zsjxKeVFae7Rer4FRjbRlb/AAeJhzom9I7hbaEk9TD5SNSKCJeUiymWQZOLj0J0GH+2hm2eWx55bJUPoJnMcn+OdN3qFwChxtFrtIHW+V/ccNNJ63ChyXYihYUqkCrguCrTbVDRyXIk7K3IGPXXzZNRxIk1xvYj5vA==";
+
+// $rsa = RSA::createKey()
+// ->loadPublicKey($actorKey)
+// ->withHash('sha256'); 
+
+// error_log($rsa->verify( $signatureBase,  base64_decode($sig, true))?"Y":"N");
+
+// die;
 
 
 $request = json_decode(file_get_contents('php://input'));
@@ -113,7 +168,7 @@ $signatureBase = '';
 foreach($signatureHeaders as $signatureHeader) {
 
   if($signatureHeader=='(request-target)') {
-    $signatureBase.='(request-target) '.$request_target."\n";
+    $signatureBase.='(request-target): '.$request_target."\n";
   } else {
     $signatureBase.=$signatureHeader.': '.$_SERVER['HTTP_'.strtr(strtoupper($signatureHeader),'-','_')]."\n";
   }
@@ -129,11 +184,11 @@ $decrypted = '';
                   ->loadPublicKey($actorKey)
                   ->withHash('sha256'); 
 
-// error_log(':'.$actorKey.':'); 
+ error_log(':'.$actorKey.':'); 
 
 error_log(':'.$signatureBase.':'); 
 
-// error_log(':'.$result['signature'].':'); 
+ error_log(':'.$result['signature'].':'); 
 
 
 //error_log(':'.base64_decode($result['signature'], true).':'); 
