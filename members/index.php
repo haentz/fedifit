@@ -69,6 +69,12 @@ if ($user->getStravaAccessToken()==null) {
     ?>
 </pre>
 
+Recent rides synced on Strava: <br>
+<ul class="ridelist">
+    <li><a href="pullStravaActivity.php?id=<?= ?>">Get <?= ?></a></li>
+    <li>Ride 2  add images</li>
+</ul>
+
 Recent rides synced from Strava: <br>
 <ul class="ridelist">
     <li>Ride 1  add images</li>
